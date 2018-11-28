@@ -1,0 +1,11 @@
+﻿/* -------------------------------------------------
+ * 故障页
+ * -------------------------------------------------
+*/
+.notfind{width:480px;margin:120px auto;color:#000;text-align:center;}
+.notfind .con h3{font-size:120px;font-family:'黑体';line-height:110px;color:#000}
+.notfind .con p{font-size:18px;}
+.notfind .btn{margin-top:85px;}
+.notfind .btn .go_prev{margin-right:75px;font-size:24px;color:#f63c30;}
+.notfind .btn .go_index{font-size:24px;color:#009a78;}
+

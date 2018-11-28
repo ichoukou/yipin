@@ -1,0 +1,38 @@
+/* -------------------------------------------------
+ * 列表页
+ * -------------------------------------------------
+*/
+.rank_wrap{margin-top:10px;line-height:30px;border:1px solid #c8c8c8;}
+.rank_wrap .page_nav{float:right;width:125px;_display:inline;margin-right:8px;}
+.rank_wrap .page_nav span .cur{color:#f63c30;}
+.rank_wrap .s_elect{float:right;_display:inline;margin-right:38px;}
+.rank_wrap .s_elect input{vertical-align:text-bottom;margin-right:5px;}
+.rank_wrap .rank{float:left;}
+.rank_wrap .rank span{float:left;border-right:1px solid #c8c8c8;padding:0 18px;cursor:pointer;}
+.rank_wrap .rank span.r_spri{background:url('../../images/rank/rank.gif') right 9px no-repeat;}
+.rank_wrap .rank span.cur{background-position:right -38px;background-color:#fff5e8;border:1px solid #f68780;margin:-1px;}
+/* 售罄提示 */
+.gd_item .sold_out{position:absolute;top:34px;left:0;width:224px;height:224px;background:url('../../images/sold_out.png') no-repeat;}
+
+
+.pro_list .gd_item li{width:224px;}
+.pro_list .b_reason{width:204px;}
+.pro_list .s_pic{height:224px;}
+
+/* 分类列表 */
+#newpro_online .input-text{width:32px;}
+#newpro_online .g_cart{width:90px;padding-left:30px;background-position:7px center;}
+#newpro_online .add_suc{width:104px;}
+#newpro_online .g_order{width:120px;}
+
+/* 普通列表 */
+#nor_sale .input-text{width:32px;}
+#nor_sale .g_cart{width:90px;padding-left:30px;background-position:7px center;}
+#nor_sale .add_suc{width:104px;}
+#nor_sale .g_order{width:120px;}
+
+
+
+
+
+

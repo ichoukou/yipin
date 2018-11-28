@@ -1,0 +1,55 @@
+/* -------------------------------------------------
+ * 我的订单
+ * -------------------------------------------------
+*/
+.my_order{margin-top:10px;}
+.uc_act{float:right;}
+.uc_act select{margin-left:10px;}
+.data_item{margin-bottom:10px;}
+.data_con{border:1px solid #cccccc;overflow:hidden;display:block;}
+.data_con .uf_item{border-bottom:1px solid #cccccc;margin-bottom:-1px;}
+.data_item .ord_num{display:inline-block;background:url('../../images/ds_jiah.gif') left center no-repeat;padding-left:15px;}
+.data_item .change .ord_num{background:url('../../images/ds_jianh.gif') left center no-repeat;}
+.data_item .line{margin:0 8px;color:#1538ac;}
+.data_item .mny{color:#f63c30;}
+.data_item .unfold .pak_nm{text-align:right;}
+.data_item .unfold a{color:#1538ac;}
+.data_item .unfold td{padding:5px 0;background-color:#ededed;border-bottom:1px dashed #b2b2b2;}
+.package .red{color: #f63c30;}
+
+/*订单状态显示*/
+.pack_box{margin-bottom:20px;}
+.pack_box .p_state{text-align:center;padding:20px 0 5px;}
+.p_list{padding-left:98px;}
+.p_list ul li{float:left;padding:0 0 0 115px;width:70px;}
+.p_list ul li span{display: block;}
+.p_list ul li .color{color: #B2B2B2;}
+
+/*显示商品列表*/
+.ps_proList{width:100%;}
+.ps_proList .c1{color:#4954ea;}
+.ps_proList .c2{color:#b2b2b2;}
+.ps_proList thead th{background-color:#ededed;line-height:30px;font-weight:normal;border-bottom:1px dashed #b2b2b2;padding-left:20px;text-align:left;}
+.ps_proList tbody td{padding:8px 0 8px 20px;}
+.ps_proList .ps_pic{float:left;}
+.ps_proList .ps_tC{overflow:hidden;*zoom:1;padding:10px 0 0 10px;}
+
+/*订单备注显示*/
+.o_remark{padding:5px 0;}
+
+.total{background: #ededed;text-align: right;padding:10px 18px 0 0;}
+.total .rental{color:#f63c30; font-size: 25px; font-weight: 700; }
+.total .red i{font-weight: 100; font-size: 12px;}
+.detail table{width:100%;}
+.detail .table_2{border: 1px solid #cccccc;}
+.detail table th{background: #ededed;text-align: left;height: 26px;}
+.detail table th,.detail table td{padding-left:10px;}
+.detail table td{height: 26px; padding: 5px 0 5px 10px;}
+.detail_wp{border: 1px solid #cccccc;margin-top: 10px;}
+.detail_wp .detail_con{line-height: 25px; padding: 10px; border-bottom: 1px dotted #cccccc;}
+.detail_wp .detail_last{border-bottom: none;}
+.blue a{color:#2331e6; text-decoration: underline;}
+.detail table .width_1{width:170px;}
+.detail table .width_2{width:543px;}
+/*订单详情-物流信息ajax loading*/
+.wl_wp .loading{text-align:center;border:1px solid #cccccc;padding:20px 0;}

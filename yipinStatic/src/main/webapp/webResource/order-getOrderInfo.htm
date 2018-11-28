@@ -1,0 +1,471 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title>结算</title>
+	
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="shortcut icon" type="image/x-icon" href="/front/favicon.ico" media="screen" />
+<link rel="icon" type="image/x-icon" href="/front/favicon.ico" media="screen" />
+<!-- css -->
+<link rel="stylesheet" type="text/css" href="css/lib/global.css" media="all" />
+<link rel="stylesheet" type="text/css" href="js/plugin/artdialog/skins/ytoxl.css?d=201306040957" media="all">
+
+
+	<link rel="stylesheet" href="css/pages/order.css" />
+</head>
+<body>
+	
+<!--[if lt IE 9]>  
+<script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>  
+<![endif]-->
+<!--头部 start-->
+		<div class="topbar">
+			<div class="w_norm tar">
+				<div class="fl">
+				
+		   <p class="fn_left">您好&nbsp;
+		   土豪~ | <a href="javascript:logout();" class="topbar-logout"> 退出</a>
+	        <a href="/front/order/order-myOrders.htm">我的一品</a></p>
+	    
+				</div>
+				<span class="cs">客服热线：021-6090 4918 转 8012</span><a href="javascript:;">帮助中心</a>
+			</div>
+		</div>
+		<!--顶部bar end-->
+		<!--slogan start-->
+		<div class="w_norm cf">
+			<div class="logo">
+				<a href=""><img src="images/navigation/logo.jpg" alt="" /></a>
+			</div>
+		</div>
+		<!--slogan end-->
+		<!--导航 start-->
+		<div class="nav_wrap">
+			<div class="w_norm cf">
+				<div class="main_nav">
+					<ul>
+						<li><a href="index.htm">首页</a>
+							
+						</li>
+						<li><a href="listProducts.htm?type=1">原产地</a></li>
+						<li><a href="listProducts.htm?type=2">商品分类</a></li>
+					</ul>
+				</div>
+				<a href="/front/suggest/myFind.htm" class="find">发现</a>
+			</div>
+		</div>
+<form id="qq_login_form" action="/front/j_spring_security_check" style="display:none;"  method="post">
+    	 <input type="text"  id="qq_name" name="j_username" >
+		 <input type="text"  id="qq_password"  name="j_password" >
+		 <input type="checkbox" id="remberMe" name="_spring_security_remember_me">
+</form>
+<form id="qq_logout_form" action="/front/j_spring_security_logout" style="display:none;"  method="post">
+</form>
+<script type="text/javascript" src="http://qzonestyle.gtimg.cn/qzone/openapi/qc_loader.js" data-appid="100578920" data-redirecturi="http://test.1pinwang.cn/front_2/qc_callback.html" charset="utf-8"></script>
+<script type="text/javascript">
+function logout(){
+	 QC.Login.signOut();
+	 var true_from =$('#qq_logout_form');
+	 true_from.submit();
+}
+</script>
+	<!--内容部分 start-->
+	<form action="/front/order/order-submitOrder.htm" method="post" id="cartform">
+	<input type="hidden" name="params.hasInvoice" value="1">
+	<input type="hidden" name="orders[0].orderInvoiceAddress.userAddressId">
+	<input type="hidden" name="struts.token.name" value="token" />
+<input type="hidden" name="token" value="FNGBM61H9F6JW5IRJ7LERYP9P8LHC746" />
+	<div class="w_norm order_content">
+		<div class="order_lc"><img src="images/navigation/lc.png" alt="" /></div>
+		<!--收货地址 start-->
+		<div class="profile">
+			<h2>收货地址<span>请选择您的收货地址</span></h2>
+			<!-- <ul class="profile_hd cf J_profile_hd">
+				<li class="cur">自用模式<span>为您自己的生活品质加分，请选择此选项<br>(此选项只可选择单一送货地址)</span></li>
+			</ul> -->
+			<div class="deliv_adr J_myDress J_myDressCur" id="myAdr">
+				<div class="has_adr">
+					<ul>
+						
+						<li class="adr_list adr_listCur"  data-address="126">
+							<a href="javascript:" title="寄送到此地址" class="J_hoverDress">寄送到此地址</a>
+							&#23665;&#35199;&#30465;&#38451;&#27849;&#24066;&#24066;&#36758;&#21306;1212  (121 收)  13813813811
+							<span class="J_defaultDress" style="margin-left:10px;">(默认地址)</span>
+							
+						</li>
+						
+					</ul>
+				</div>
+				<div class="btn_adr"><span class="create_adr J_adress_1">添加新地址</span></div>
+				<div class="newadr_wp"><div class="new_adr"></div></div>
+			</div>
+		</div>
+		<!--收货地址 end-->
+		<!--支付宝 start-->
+		<div class="pay_type">
+			<h2>支付方式</h2>
+			<div class="p22 zfnBtn">
+				<a href="javascript:" class="orderBtn orderBtn_cur">
+					<input type="hidden" name="params.payType" value="1"/>支付宝
+				</a>
+			</div>
+		</div>
+		<!--支付方式 end-->
+		<!--配送方式 start-->
+		<div class="delivery_type">
+			<h2>配送方式</h2>
+			<div class="p22"><a href="javascript:" class="orderBtn orderBtn_cur">免费配送</a></div>
+		</div>
+		<!--配送方式 end-->
+		<!--发票信息 start-->
+		<div class="invoice">
+			<h2>发票信息</h2>
+			<div class="p22 J_invoiceTab cf">
+				<a href="javascript:" class="orderBtn orderBtn_cur fn_left">不开发票</a>
+				<a href="javascript:" class="orderBtn m22 fn_left mx">需要发票<br /><span>(商品明细)</span></a>
+			</div>
+			<div class="hide J_invoice">
+				<div class="join">发票说明：1.发票类型，本网站商家开具的发票类型统一为普通发票；
+<span style="padding-left:60px;display:block;">2.寄送时间，如发票寄送地址与收货地址相同，我们尽量将发票一起寄出，如遇发票送达时间晚于货物送达时间，敬请谅解。</span></div>
+				<div class="invoice_Msg">
+					<div>发票类型：</div>
+					<div><a href="javascript:" class="orderBtn orderBtn_cur">普通发票</a></div>
+					<div>发票抬头：</div>
+					<div class="J_rise personBtn">
+						<a href="javascript:" class="orderBtn orderBtn_cur">个人</a>
+						<a href="javascript:" class="orderBtn m22">单位</a></div>
+					<div class="hide J_riseBox"><font color="#e5372e">*</font>单位名称：
+						<input type="text" class="input-text" id="company_name" name="orders[0].invoiceTitle" maxlength="50"/>
+						<div class="invoice_tip">
+						温馨提示：您所填写的所有内容都将被系统自动打印到发票上，所以请不要填写和发票抬头无关的信息。
+						<br />受品牌商客观因素影响，发票可能会发生延迟；如果延迟请见谅。
+					</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--发票信息 end-->
+		<!--商品清单 start-->
+		<div class="goods_inventory">
+			<h2>商品清单<span><a href="#">返回购物车</a></span></h2>
+			<table class="th_table">
+				<thead>
+					<tr>
+						<th width="480" class="th_a">商品</th>
+						<th width="90">规格</th>
+						<th width="90">重量</th>
+						<th width="130">一品价</th>
+						<th width="110">数量</th>
+						<th>小计</th>
+					</tr>
+				</thead>
+			</table>
+			
+			<div class="order_th">
+				发货地：虹口广灵四路349弄
+						<span class="red">（抢购订单）</span>
+			</div>
+			<table class="order_table">
+				<tbody>	
+					<tr>
+						<td width="560" class="p20">
+							<img src="http://test.1pinwang.cn/yipinFile/media/thumb/yipin/product/2014/01/02/33f6defd-3ebf-4155-90dd-7f931ba9a691.jpg_t83.jpg" alt="测试商品" width="76" height="76"/>
+							<span>测试商品</span>
+						</td>
+						<td width="90"><span class="f14">500g</span></td>
+						<td width="90"><span class="f14">500g</span></td>
+						<td width="130"><span class="f14 red">200</span></td>
+						<td width="110">
+							<div class="rel">
+								<span class="f14">10</span>
+								
+							</div>
+						</td>
+						<td><span class="f14 red">￥2000</span></td>
+					</tr>
+					<tr class="last">
+						<td colspan="6">
+							<div class="fl bz_box">
+								<a href="javascript:" class="J_write">填写订单备注</a>
+								<div class="J_writeBox hide">
+									订单备注：<input type="text" class="input-text J_bzInput bzInput" maxlength="50" data-default="选填：对本次交易的补充说明（建议填写已经和卖家达成一致的说明），最多50个字"/>
+									<a href="javascript:" class="orderEnterBtn J_orderEnter">确定</a>
+									<a href="javascript:" class="orderCancelBtn J_orderCancel">取消</a>
+								</div>
+								<div class="J_changeBox hide">
+									<a href="javascript:" class="J_edit">修改</a>
+									订单备注：<span class="J_bz">请在周六送货请在周六送请在周六送请在周六送请在周六送请在周六送请在周六送请在周六送请在周六送请在周六送</span>
+								</div>
+							</div>
+							<div class="fl yz_box">
+								运费：50元<span class="M30">运费优惠：-50元</span>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="order_th">
+				发货地：虹口广灵四路349弄
+						<span class="red">（抢购订单）</span>
+			</div>
+			<table class="order_table">
+				<tbody>	
+					<tr>
+						<td width="560" class="p20">
+							<img src="http://test.1pinwang.cn/yipinFile/media/thumb/yipin/product/2014/01/02/33f6defd-3ebf-4155-90dd-7f931ba9a691.jpg_t83.jpg" alt="测试商品" width="76" height="76"/>
+							<span>测试商品</span>
+						</td>
+						<td width="90"><span class="f14">500g</span></td>
+						<td width="90"><span class="f14">500g</span></td>
+						<td width="130"><span class="f14 red">200</span></td>
+						<td width="110">
+							<div class="rel">
+								<span class="f14">10</span>
+								
+							</div>
+						</td>
+						<td><span class="f14 red">￥2000</span></td>
+					</tr>
+					<tr class="last">
+						<td colspan="6">
+							<div class="fl bz_box">
+								<a href="javascript:" class="J_write">填写订单备注</a>
+								<div class="J_writeBox hide">
+									订单备注：<input type="text" class="input-text J_bzInput bzInput" maxlength="50" data-default="选填：对本次交易的补充说明（建议填写已经和卖家达成一致的说明），最多50个字"/>
+									<a href="javascript:" class="orderEnterBtn J_orderEnter">确定</a>
+									<a href="javascript:" class="orderCancelBtn J_orderCancel">取消</a>
+								</div>
+								<div class="J_changeBox hide">
+									<a href="javascript:" class="J_edit">修改</a>
+									订单备注：<span class="J_bz">请在周六送货请在周六送请在周六送请在周六送请在周六送请在周六送请在周六送请在周六送请在周六送请在周六送</span>
+								</div>
+							</div>
+							<div class="fl yz_box">
+								运费：50元<span class="M30">运费优惠：-50元</span>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="order_th">
+				发货地：虹口广灵四路349弄
+						<span class="red">（抢购订单）</span>
+			</div>
+			<table class="order_table">
+				<tbody>	
+					<tr>
+						<td width="560" class="p20">
+							<img src="http://test.1pinwang.cn/yipinFile/media/thumb/yipin/product/2014/01/02/33f6defd-3ebf-4155-90dd-7f931ba9a691.jpg_t83.jpg" alt="测试商品" width="76" height="76"/>
+							<span>测试商品</span>
+						</td>
+						<td width="90"><span class="f14">500g</span></td>
+						<td width="90"><span class="f14">500g</span></td>
+						<td width="130"><span class="f14 red">200</span></td>
+						<td width="110">
+							<div class="rel">
+								<span class="f14">10</span>
+								
+							</div>
+						</td>
+						<td><span class="f14 red">￥2000</span></td>
+					</tr>
+					<tr class="last">
+						<td colspan="6">
+							<div class="fl bz_box">
+								<a href="javascript:" class="J_write">填写订单备注</a>
+								<div class="J_writeBox hide">
+									订单备注：<input type="text" class="input-text J_bzInput bzInput" maxlength="50" data-default="选填：对本次交易的补充说明（建议填写已经和卖家达成一致的说明），最多50个字"/>
+									<a href="javascript:" class="orderEnterBtn J_orderEnter">确定</a>
+									<a href="javascript:" class="orderCancelBtn J_orderCancel">取消</a>
+								</div>
+								<div class="J_changeBox hide">
+									<a href="javascript:" class="J_edit">修改</a>
+									订单备注：<span class="J_bz">请在周六送货请在周六送请在周六送请在周六送请在周六送请在周六送请在周六送请在周六送请在周六送请在周六送</span>
+								</div>
+							</div>
+							<div class="fl yz_box">
+								运费：50元<span class="M30">运费优惠：-50元</span>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		<div class="order_tip">
+			<p class="fr">选中<i class="red">2</i>个订单 <span class="m20">共<i class="red">4</i>件商品</span>选购商品来自不同的产地，一城一品保证由原产地发货，系统将为您拆分为多个订单！</p>
+			<a href="#">返回购物车</a>
+			<p class="fr">此商品每账号限抢<i class="red">1</i>件，请在抢拍成功后尽快付款，可能会被其他客官抢走，若<i class="red">40</i>分钟内未付款，系统将自动取消您的抢购订单！</p>
+		</div>
+		<!--商品清单 end-->
+		<!--结算信息 start-->
+		<div class="cf clearing_msg">
+			<div class="fn_right">
+				<p>共<span class="shuliang"></span>件商品</p>
+				<p>商品总量：3500克</p>
+				<p>商品总价：<span class="allPrice"></span>元</p>
+				<p>运费：
+						<span class="freight">20.00</span>
+					元</p>
+				<p>运费优惠：
+						<span class="freightFire">-20.00</span>
+					元</p>
+				<p>获得积分：<span class="J-jifen">0</span>分</p>
+				<p class="t_line">应付总额：<i class="red">￥</i><span class="price">33</span><span class="rmb">元</span></p>
+				<p class="red">请尽快支付款项，您未支付订单的商品可能被其他客官抢购一空！</p>
+				<p><a href="javascript:;" class="ClearingBtn" id="ClearingBtn">提交订单</a></p>
+			</div>
+		</div>
+		<!--结算信息 start-->
+		<div class="hide" id="_hiddenFormData">
+			
+				<input type='hidden' name='orders[0].addressItems[0].userAddressId' value='126'/>
+				
+		</div>
+	</div>
+	</form>
+	
+<div class="foot">
+	<!--底部服务保障 start-->
+	<div class="foot_top cf">
+		<ul>
+			<li>
+				<h4 class="ensure1">100%原产地发货</h4>
+			</li>
+			<li>
+				<h4 class="ensure2">产地直供 品质保证</h4>
+			</li>
+			<li class="none">
+				<h4 class="ensure3">专业物流 安全速达</h4>
+			</li>
+		</ul>
+	</div>
+	<!--底部服务保障 end-->
+	<div class="foot_mid_wp">
+		<!--底部导航 start-->
+		<div class="foot_mid cf">
+			<!--帮助信息 start-->
+			<div class="help">
+                 
+				<dl>
+					<dt>购物指南</dt>
+					
+                           <dd><a target="_blank" href="/front/help/help-100000.htm" target="_blank" rel="nofollow">新用户注册</a></dd>
+                       
+                           <dd><a target="_blank" href="/front/help/help-100001.htm" target="_blank" rel="nofollow">购物流程</a></dd>
+                       
+                           <dd><a target="_blank" href="/front/help/help-100002.htm" target="_blank" rel="nofollow">订单查询与操作</a></dd>
+                        
+				</dl>
+			
+				<dl>
+					<dt>关于配送</dt>
+					
+                           <dd><a target="_blank" href="/front/help/help-100003.htm" target="_blank" rel="nofollow">配送方式</a></dd>
+                       
+                           <dd><a target="_blank" href="/front/help/help-100004.htm" target="_blank" rel="nofollow">验货与签收</a></dd>
+                        
+				</dl>
+			
+				<dl>
+					<dt>关于支付</dt>
+					
+                           <dd><a target="_blank" href="/front/help/help-100005.htm" target="_blank" rel="nofollow">支付方式</a></dd>
+                       
+                           <dd><a target="_blank" href="/front/help/help-100006.htm" target="_blank" rel="nofollow">关于发票</a></dd>
+                        
+				</dl>
+			
+				<dl>
+					<dt>售后服务</dt>
+					
+                           <dd><a target="_blank" href="/front/help/help-100007.htm" target="_blank" rel="nofollow">正品保障</a></dd>
+                       
+                           <dd><a target="_blank" href="/front/help/help-100008.htm" target="_blank" rel="nofollow">退换货政策</a></dd>
+                        
+				</dl>
+			
+				<dl>
+					<dt>关于我们</dt>
+					
+                           <dd><a target="_blank" href="/front/help/help-100011.htm" target="_blank" rel="nofollow">公司介绍</a></dd>
+                       
+                           <dd><a target="_blank" href="/front/help/help-100013.htm" target="_blank" rel="nofollow">联系方式</a></dd>
+                       
+                           <dd><a target="_blank" href="/front/help/help-100015.htm" target="_blank" rel="nofollow">商务合作</a></dd>
+                       
+                       	 <dd><a href="/front/links.htm" target="_blank">友情链接</a></dd>
+                        
+				</dl>
+			
+			</div>
+			<!--帮助信息 end-->
+			<!--关注信息 start-->
+			<div class="fol_c1">
+				<p class="hotline">021-60919872转 8012</p>
+				<p class="yy_time">客服热线：AM09:00-PM06:00(工作日)</p>
+				<p><a href="http://weibo.com/yichengpin" target="_blank"><img src="images/foot/weibo.png" alt="" /></a></p>
+			</div>
+			<div class="fol_c2">
+				<p class="wx_tit">一城一品官方微信</p>
+				<p class="img">
+					<img src="images/foot/weixin.jpg" alt="" />
+				</p>
+				<p>扫一扫，拿优惠</p>
+			</div>
+			<!--关注信息 end-->
+		</div>
+		<!--底部导航 end-->
+	</div>
+    <div class="foot_bot_wp">
+        <div class="foot_bot">
+           <p><span>Copyright © 2000-2013 All Rights Reserved</span>上海圆通新龙电子商务有限公司   沪ICP备07507086号-5</p>
+        </div>
+    </div>
+</div>
+<!--js-->
+<script type="text/javascript" src="js/jquery/jquery-1.8.1.js"></script>
+<script type="text/javascript" src="js/plugin/json2.js"></script>
+<script type="text/javascript" src="js/plugin/plugin.js"></script>
+<script type="text/javascript" src="js/lib/global.js"></script>
+<script type="text/javascript" src="js/plugin/artdialog/jquery.artDialog.min.js"></script>
+<script type="text/javascript" src="js/plugin/formvalidator/formValidator-4.1.3.js"></script>
+<script type="text/javascript" src="js/plugin/formvalidator/formValidatorRegex.js"></script>
+<script type="text/javascript" src="js/plugin/calendar/WdatePicker.js"></script>
+
+<script type="text/javascript">
+	var _ctxPath = '/front';
+	var _imagesPath = 'images';
+	//分页数量只可以输入数字
+	$("#pageIndex").keyup(function(event) {
+	    var $this = $(this);
+	    olnyNumber($this);
+	});
+	function olnyNumber($this){
+		var value = $this.val();
+	    if(value!=""){
+			var reg = /[^0-9]/g;
+			value = value.replace(reg,"")
+			if(parseInt(value)==0){
+				value = "";
+			}
+			if(value.length>9){
+				value = value.substring(0,100);
+			}
+			$this.val(value);
+		}
+	}
+</script>
+
+
+
+
+
+
+
+
+
+
+</body>
+	<script src="js/plugin/select/linkage_sel.js"></script>
+	<script type="text/javascript" src="js/pages/order.js"></script>
+</html>

@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ytoxl.module.yipin.base.mapper.SaleMapper">
+	<resultMap id="SaleRM" type="com.ytoxl.module.yipin.base.dataobject.Sale">
+		<result property="saleId" column="S_SALEID" />
+		<result property="brandId" column="S_BRANDID" />
+		<result property="preSelltime" column="S_PRESELLTIME" />
+		<result property="sellType" column="S_SELLTYPE" />
+		<result property="status" column="S_STATUS" />
+		<result property="createtime" column="S_CREATETIME" />
+		<result property="updateTime" column="S_UPDATETIME" />
+		<result property="creator" column="S_CREATOR" />
+		<result property="lastModifier" column="S_LASTMODIFIER" />
+		<result property="brandName" column="B_BRANDNAME"/>
+	</resultMap>
+	<sql id="Sale_column">
+		<![CDATA[
+			S.SALEID S_SALEID,
+			S.BRANDID S_BRANDID,
+			S.PRESELLTIME S_PRESELLTIME,
+			S.SELLTYPE S_SELLTYPE,
+			CASE 
+				WHEN 
+					STATUS = ${@com.ytoxl.module.yipin.base.dataobject.Sale@STATUS_RELEASE} 
+				AND PRESELLTIME IS NULL THEN ${@com.ytoxl.module.yipin.base.dataobject.Sale@STATUS_ONSELL}   
+				WHEN 
+					STATUS = ${@com.ytoxl.module.yipin.base.dataobject.Sale@STATUS_RELEASE}  
+				AND PRESELLTIME < NOW() THEN ${@com.ytoxl.module.yipin.base.dataobject.Sale@STATUS_ONSELL}  
+				ELSE STATUS
+ 			END S_STATUS,
+			S.CREATETIME S_CREATETIME,
+			S.UPDATETIME S_UPDATETIME,
+			S.CREATOR S_CREATOR,
+			S.LASTMODIFIER S_LASTMODIFIER
+		]]>
+	</sql>
+	<!-- 根据主键ID查询 销售信息(附带品牌名字)-->
+	<select id="getSaleById" resultMap="SaleRM">
+		SELECT 
+		<include refid="Sale_column" />,B.NAME B_BRANDNAME
+		FROM SALE  S
+		INNER JOIN BRAND B
+		ON S.BRANDID = B.BRANDID
+		WHERE S.SALEID = #{saleId,jdbcType=NUMERIC}
+	</select>
+	<!-- 根据条件查询 销售信息(附带品牌名字)-->
+	<select id="listSaleWithBrand" parameterType="com.ytoxl.module.yipin.base.dataobject.Sale" resultMap="SaleRM">
+		SELECT 
+		<include refid="Sale_column" />,B.NAME B_BRANDNAME
+		FROM SALE S
+		INNER JOIN BRAND B
+		ON S.BRANDID = B.BRANDID
+			WHERE 1=1
+		<if test="brandId != null and brandId != ''">
+			AND S.BRANDID = #{brandId,jdbcType=NUMERIC}
+		</if>
+		<if test="startTime != null and startTime != ''">
+			AND S.PRESELLTIME >= #{startTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			<![CDATA[AND S.PRESELLTIME <= #{endTime,jdbcType=TIMESTAMP}]]>
+		</if>
+		<if test="sellType != null and sellType != ''">
+			AND S.SELLTYPE = #{sellType,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null and status != ''">
+			<if test="status == status_Onsell">
+			<![CDATA[	AND S.STATUS = ${@com.ytoxl.module.yipin.base.dataobject.Sale@STATUS_RELEASE}
+				AND (S.PRESELLTIME IS NULL OR S.PRESELLTIME < NOW())]]>
+			</if>
+			<if test="status != status_Onsell">
+				AND S.STATUS = #{status,jdbcType=NUMERIC}
+			</if>
+		</if>
+		<if test="statusList != null">
+			AND S.STATUS IN 
+			<foreach collection="statusList" item="status" open="(" close=")"
+				separator=",">
+				<![CDATA[#{status,jdbcType=NUMERIC}]]>
+			</foreach>
+		</if>
+		<if test="saleId != null and saleId != ''">
+			AND S.SALEID = #{saleId,jdbcType=NUMERIC}
+		</if>
+	</select>
+	
+	<!-- 根据条件分页查询(附带品牌名字) -->
+	<select id="searchSaleWithBrandByLimit"  parameterType="map" resultMap="SaleRM">
+		SELECT 
+		<include refid="Sale_column" />,B.NAME B_BRANDNAME
+		FROM SALE S
+		INNER JOIN BRAND B
+		ON S.BRANDID = B.BRANDID
+			WHERE 1=1
+		<if test="brandId != null and brandId != ''">
+			AND S.BRANDID = #{brandId,jdbcType=NUMERIC}
+		</if>
+		<if test="startTime != null and startTime != ''">
+			AND S.PRESELLTIME >= #{startTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			<![CDATA[AND S.PRESELLTIME <= #{endTime,jdbcType=TIMESTAMP}]]>
+		</if>
+		 ORDER BY S_SALEID DESC LIMIT #{start}, #{limit} 
+	</select>
+	<!-- 分页统计 -->
+	<select id="countSaleWithBrand" parameterType="com.ytoxl.module.yipin.base.dataobject.Sale" resultType="java.lang.Integer">
+		SELECT 
+		 count(*)
+		FROM SALE S
+		INNER JOIN BRAND B
+		ON S.BRANDID = B.BRANDID
+			WHERE 1=1
+		<if test="brandId != null and brandId != ''">
+			AND S.BRANDID = #{brandId,jdbcType=NUMERIC}
+		</if>
+		<if test="startTime != null and startTime != ''">
+			AND S.PRESELLTIME >= #{startTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			<![CDATA[AND S.PRESELLTIME <= #{endTime,jdbcType=TIMESTAMP}]]>
+		</if>
+	</select>
+	
+	<!-- 根据id查询销售类型 -->
+	<select id="getSaleByBrandId" parameterType="java.lang.Integer" resultType="Sale">
+	   select s.sellType,s.preSellTime from sale s WHERE brandId = #{brandId} AND 
+	   	s.STATUS = ${@com.ytoxl.module.yipin.base.dataobject.Sale@STATUS_RELEASE}
+	</select>
+	<!-- 使用销售实体作为查询条件查询符合条件销售数据 -->
+	<select id="listBySale" parameterType="com.ytoxl.module.yipin.base.dataobject.Sale"
+		resultMap="SaleRM">
+		SELECT
+		<include refid="Sale_column" />
+		FROM SALE S
+		WHERE 1=1
+		<if test="brandId != null and brandId != ''">
+			AND S.BRANDID = #{brandId,jdbcType=NUMERIC}
+		</if>
+		<if test="preSelltime != null and preSelltime != ''">
+			<if test="status == null or status != status_Onsell">
+				AND S.PRESELLTIME = #{preSelltime,jdbcType=TIMESTAMP}
+			</if>
+		</if>
+		<if test="sellType != null and sellType != ''">
+			AND S.SELLTYPE = #{sellType,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null and status != '' and status == status_Onsell">
+			<![CDATA[	AND S.STATUS = ${@com.ytoxl.module.yipin.base.dataobject.Sale@STATUS_RELEASE}
+				AND (S.PRESELLTIME IS NULL OR S.PRESELLTIME < NOW())]]>
+		</if>
+		<if test="status != null and status != '' and status != status_Onsell">
+				AND S.STATUS = #{status,jdbcType=NUMERIC}
+		</if>
+		<if test="statusList != null">
+			AND S.STATUS IN 
+			<foreach collection="statusList" item="status" open="(" close=")"
+				separator=",">
+				<![CDATA[#{status,jdbcType=NUMERIC}]]>
+			</foreach>
+		</if>
+		<if test="saleId != null and saleId != ''">
+			AND S.SALEID = #{saleId,jdbcType=NUMERIC}
+		</if>
+	</select>
+	<!-- 根据ID修改销售信息 -->
+	<update id="updateSaleById" parameterType="com.ytoxl.module.yipin.base.dataobject.Sale">
+		UPDATE SALE SET
+		<if test="brandId != null and brandId != ''">
+			BRANDID = #{brandId,jdbcType=NUMERIC},
+		</if>
+		<if test="sellType != null and sellType != ''">
+			SELLTYPE = #{sellType,jdbcType=VARCHAR},
+		</if>
+		<if test="status != null and status != ''">
+			STATUS = #{status,jdbcType=NUMERIC},
+		</if>
+		<if test="lastModifier != null and lastModifier != ''">
+			LASTMODIFIER = #{lastModifier,jdbcType=NUMERIC},
+		</if>
+		PRESELLTIME = #{preSelltime,jdbcType=TIMESTAMP}
+		WHERE SALEID = #{saleId,jdbcType=NUMERIC}
+	</update>
+	<!-- 一键发布 -->
+	<update id="updateStatusByIds"  parameterType="map">
+		UPDATE 
+			SALE 
+		SET	
+			STATUS = #{status,jdbcType=NUMERIC}
+		WHERE 
+			SALEID IN
+		<foreach collection="list" item="saleId" open="(" close=")"
+			separator=",">
+			<![CDATA[#{saleId,jdbcType=NUMERIC}]]>
+		</foreach>
+	</update>
+	<!-- 新增销售信息 -->
+	<insert id="addSale" parameterType="com.ytoxl.module.yipin.base.dataobject.Sale">
+		<selectKey resultType="java.lang.Integer" keyProperty="saleId"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO SALE
+		(BRANDID,
+		PRESELLTIME,SELLTYPE,
+		STATUS,CREATETIME,
+		CREATOR,LASTMODIFIER)
+		VALUES
+		(#{brandId,jdbcType=NUMERIC},
+		#{preSelltime,jdbcType=TIMESTAMP},#{sellType,jdbcType=VARCHAR},
+		#{status,jdbcType=NUMERIC},now(),
+		#{creator,jdbcType=NUMERIC},#{lastModifier,jdbcType=NUMERIC})
+	</insert>
+	<!-- 查询销售对象 -->
+	<select id="getSaleByBrandIdAndStatus" resultMap="SaleRM"
+		parameterType="java.lang.Integer">
+		SELECT
+		saleId,brandId,preSellTime,sellType,status,createTime,updateTime,creator,lastModifier
+		FROM sale
+		WHERE 
+		brandId = #{brandId}  AND status = ${@com.ytoxl.module.yipin.base.dataobject.Sale@STATUS_RELEASE} LIMIT 1
+
+	</select>
+</mapper>

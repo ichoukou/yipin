@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="zone" extends="yipin-default" namespace="/admin/zone">
+    	<action name="zone-*" class="com.ytoxl.yipin.web.action.zone.ZoneAction" method="{1}">
+    	   <result name="salezone" >/WEB-INF/pages/zone/salezone.jsp</result>
+    	   <result name="specialzone" >/WEB-INF/pages/zone/specialzone.jsp</result>
+    	   <result name="detailzone" >/WEB-INF/pages/zone/detailzone.jsp</result>
+    	   <result name="listzone" >/WEB-INF/pages/zone/listzone.jsp</result>
+    	   <result name="seazone" >/WEB-INF/pages/zone/seazone.jsp</result>
+    	   <result name="targetdefault" type="redirect">
+    	   		<param name="location">zone-showDetailZone.htm</param>
+    	   		<param name="zone.zoneId">${zone.zoneId}</param>
+    	   </result>
+    	   <result name="targetsale" type="redirect">
+    	   		<param name="location">zone-showSaleZone.htm</param>
+    	   		<param name="zone.zoneId">${zone.zoneId}</param>
+    	   </result>
+    	   <result name="targetspecial" type="redirect">
+    	   		<param name="location">zone-showSpecialZone.htm</param>
+    	   		<param name="zone.zoneId">${zone.zoneId}</param>
+    	   </result>
+    	</action>
+	</package>
+</struts>

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ytoxl.module.yipin.base.mapper.ProductSkuMapper">
+	
+	<!-- 插入一条商品SKU数据 -->
+	<insert id="add" parameterType="ProductSku"  keyProperty="productSkuId" useGeneratedKeys="true">
+		INSERT INTO product_sku
+			(productId, inventory, internationalCode, skuCode, unitPrice, createTime)
+		VALUES
+		 	(#{productId}, #{inventory}, #{internationalCode}, #{skuCode}, #{unitPrice}, CURRENT_TIMESTAMP)
+	</insert>
+	
+	<!-- 更新一条商品SKU数据 -->
+	<update id="update" parameterType="ProductSku">
+		UPDATE product_sku
+		SET
+			inventory = #{inventory},
+			internationalCode = #{internationalCode},
+			skuCode = #{skuCode},
+			unitPrice = #{unitPrice}
+		WHERE productSkuId = #{productSkuId}
+	</update>
+	
+	<!-- 逻辑删除一条商品SKU数据 -->
+	<update id="del" parameterType="java.lang.Integer">
+		UPDATE product_sku
+		SET isDelete = ${@com.ytoxl.module.yipin.base.dataobject.ProductSku@ISDELETE_YES}
+		WHERE productSkuId = #{productSkuId}
+	</update>
+	
+	<!-- 逻辑删除多条SKU数据 -->
+	<update id="logicDelBatch">
+		UPDATE product_sku
+		SET isDelete = ${@com.ytoxl.module.yipin.base.dataobject.ProductSku@ISDELETE_YES}
+		WHERE productSkuId IN
+		<foreach item="productSku" collection="list" open="(" separator="," close=")">
+			#{productSku.productSkuId}
+		</foreach>
+	</update>
+	
+	<select id="get" parameterType="java.lang.Integer" resultType="ProductSku">
+		SELECT * FROM product_sku 
+		WHERE productSkuId = #{productSkuId}
+	</select>
+	
+	<!-- 根据skuCode查询数据 ,判断skuCode是否已存在-->
+	<select id="getBySkuCode" parameterType="ProductSku" resultType="ProductSku">
+		SELECT productSkuId FROM product_sku 
+		WHERE skuCode = #{skuCode}
+			<if test="productSkuId != null and productSkuId != ''">
+			AND productSkuId != #{productSkuId}
+			</if>
+	</select>
+	
+	<!-- 根据productId, sellerId查询商品SKU信息 -->
+	<select id="listProductSkuIdsByProductIdAndUserId" resultType="java.lang.Integer">
+		SELECT a.productSkuId 
+			FROM product_sku a INNER JOIN product b ON a.productId = b.productId
+		WHERE a.productId = #{productId} 
+			AND b.userId = #{userId}
+			AND a.isDelete = ${@com.ytoxl.module.yipin.base.dataobject.ProductSku@ISDELETE_NO}
+	</select>
+	
+	<!-- 更新库存为0 -->
+	<update id="updateInventoryByIds">
+		UPDATE product_sku SET inventory = 0
+		WHERE productSkuId IN
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	<!-- 根据商品ID查询商品SKU -->
+	<select id="listProductSkusByProductId" parameterType="java.lang.Integer" resultType="ProductSku">
+		SELECT a.productSkuId, a.unitPrice, a.inventory,
+				a.skuCode, a.internationalCode
+			FROM product_sku a
+		WHERE a.productId = #{productId}
+			AND a.isDelete = ${@com.ytoxl.module.yipin.base.dataobject.ProductSku@ISDELETE_NO}
+	</select>
+	
+	<!-- 根据商品ID删除ProductSku -->
+	<delete id="delProductSkuByProductId" parameterType="java.lang.Integer">
+		DELETE FROM product_sku 
+		WHERE productId = #{productId}
+	</delete>
+    
+  	<!-- 更新一条商品SKU数据 -->
+	<update id="changeProductSkuInventory" >
+		UPDATE product_sku
+		SET inventory = inventory - #{num}
+		WHERE inventory - #{num} &gt;= 0
+			AND productSkuId = #{productSkuId}
+	</update>
+	
+	<update id="updateSaleQualtity">
+		update product_sku
+		set salesQuantity=IFNULL(salesQuantity,0) + #{num}
+		where productSkuId=#{productSkuId}
+	</update>
+	
+	<!-- 取消订单时,归还库存 -->
+	<update id="revertProductSkuInventory" >
+		UPDATE product_sku
+		SET inventory = inventory + #{num}
+		WHERE productSkuId = #{productSkuId}
+	</update>
+	
+	<sql id="productSkuProductInfo">
+		pro.productId AS `product.productId`,
+		pro.brandId AS `product.brandId`,
+		pro.productCategoryId AS `product.productCategoryId`,
+		pro.sellerId AS `product.sellerId`,
+		pro.name AS `product.name`,
+		pro.imageUrls AS `product.imageUrls`,
+		pro.secKillDescribe AS `product.secKillDescribe`,
+		pro.secKillPrice AS `product.secKillPrice`, 
+		pro.salePrice AS `product.salePrice`,
+		pro.marketPrice AS `product.marketPrice`,     
+		pro.isImport AS `product.isImport`, 
+		pro.rank AS `product.rank`,
+		pro.status AS `product.status`,   
+		pro.keyWord AS `product.keyWord`,  
+		pro.hits AS `product.hits`,
+		pro.rebate AS `product.rebate`,  
+		pro.sellStartTime AS `product.sellStartTime`,  
+		pro.sellEndTime AS `product.sellEndTime`,     
+		pro.createTime AS `product.createTime` 
+	</sql>
+	<!-- 根据skuId查询商品信息 -->
+  	<select id="getProductSkuById" parameterType="Integer" resultType="ProductSku">
+  		SELECT <include refid="productSkuProductInfo"/>,
+  			b.name as `product.brand.name`,
+  			sku.productSkuId,
+			sku.inventory,
+			sku.secKillInventory
+		FROM  product_sku sku INNER JOIN  product pro  ON  pro.productId = sku.productId
+			  inner join brand b on b.brandId=pro.brandId
+		where sku.productSkuId = #{productSkuId}
+  	</select>
+  	<!-- 根据skuId 和productId查询商品信息 -->
+  	<select id="getProductSkuByIdMap" parameterType="map" resultType="ProductSku">
+  		SELECT 
+			pro.imageUrls AS `product.imageUrls`,
+			pro.salePrice AS `product.salePrice`,
+			pro.marketPrice AS `product.marketPrice`,
+			pro.name AS `product.name`,
+			pro.productId AS `product.productId`,
+			sku.productSkuId,
+			sku.inventory,
+			sku.secKillInventory
+		FROM  product_sku sku INNER JOIN  product pro  ON  pro.productId = sku.productId
+		where 1=1
+		<if test="productSkuId!=null and productSkuId!='' ">
+			and sku.productSkuId = #{productSkuId}
+		</if>
+		<if test="productId!=null and productId.size()>0 ">
+				and sku.productId in 
+		 <foreach collection="productId" item="productIds"  open="(" separator="," close=")"> 
+          		(#{productIds})  
+          </foreach>
+		</if>
+  	</select>
+  	
+  	<!--  -->
+  	<select id="getProductSkuInventoryByProductSkuId" resultType="java.lang.Integer">
+  		select inventory
+  		from product_sku
+  		where productSkuId=#{productSkuId}
+  	</select>
+  	
+  	    <!-- 查询品牌商品库存 -->
+  	<select id="listBrandProducts" parameterType="java.util.List" resultType="ProductSku">
+  		SELECT productId, inventory
+		FROM product_sku sku	
+		<where>
+			<if test='list != null'>
+				sku.productId IN 
+				<foreach item="item" collection="list" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+  	</select>
+  	
+  	<!-- 根据skuCode查询商品信息集合 -->
+	<select id="listProductSkusBySkuCode" resultType="ProductSku">
+		SELECT a.productId, a.unitPrice, a.skuCode, b.brandId AS `product.brandId` FROM product_sku a 
+		INNER JOIN product b ON a.productId = b.productId
+		WHERE a.skuCode IN
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+</mapper>

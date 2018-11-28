@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ytoxl.module.yipin.order.mapper.OrderHeadMapper">
+	<!-- 新增一条订单 -->
+	<insert id="add" parameterType="OrderHead" keyProperty="orderId" useGeneratedKeys="true">
+		insert into order_head(
+			orderId,
+			orderNo,
+			userId,
+			status,
+			paymentAmount,
+			originalAmount,
+			hasInvoice,
+			invoiceTitle,
+			payTime,
+			accountId,
+			accountInfo,
+			ipAddress,
+			payStatus,
+			payType,
+			isDelete,
+			createTime
+		)
+		values(
+			#{orderId},
+			#{orderNo},
+			#{userId},
+			#{status},
+			#{paymentAmount},
+			#{originalAmount},
+			#{hasInvoice},
+			#{invoiceTitle},
+			#{payTime},
+			#{accountId},
+			#{accountInfo},
+			#{ipAddress},
+			#{payStatus},
+			#{payType},
+			#{isDelete},
+			CURRENT_TIMESTAMP
+		)
+	</insert>
+	
+	<!-- 删除一条数据 -->
+	<delete id="del" parameterType="java.lang.Integer">
+		DELETE FROM order_head WHERE orderId = #{orderId}
+  	</delete>
+  	
+  	<!-- 更新一条数据 -->
+  	<update id="update" parameterType="OrderHead">
+		UPDATE order_head
+		SET
+			orderNo = #{orderNo},
+			userId = #{userId},
+			status = #{status},
+			paymentAmount = #{paymentAmount},
+			originalAmount = #{originalAmount},
+			hasInvoice = #{hasInvoice},
+			invoiceTitle = #{invoiceTitle},
+			payTime = #{payTime},
+			accountId = #{accountId},
+			accountInfo = #{accountInfo},
+			ipAddress = #{ipAddress},
+			payStatus = #{payStatus}
+		WHERE orderId = #{orderId}
+  	</update>
+  	
+  	<!-- 查询一条数据 -->
+  	<select id="get" parameterType="integer" resultType="OrderHead">
+		SELECT
+			orderId,
+			orderNo,
+			userId,
+			status,
+			paymentAmount,
+			originalAmount,
+			hasInvoice,
+			invoiceTitle,
+			payTime,
+			accountId,
+			accountInfo,
+			ipAddress,
+			payStatus,
+			createTime,
+			updateTime
+		FROM order_head
+		WHERE orderId = #{orderId}
+  	</select>
+  	
+  		
+	<!-- 用户中心我的订单 -->
+	<select id="searchOrder4Front" resultType="OrderHead">
+		select orderId,
+			   orderNo,
+			   userId,
+			   status,
+			   hasInvoice,
+			   invoiceTitle,
+			   paymentAmount,
+			   originalAmount,
+			   createTime,
+			   updateTime
+		from order_head head
+		<where>
+			head.isDelete = ${@com.ytoxl.module.yipin.order.dataobject.OrderHead@DELETE_NO}
+			<if test="userId != null and userId != ''">
+				and head.userId = #{userId}
+			</if>
+			<if test="status != null and status != ''">
+				and head.status = #{status}
+			</if>
+			<if test="queryTime != null and queryTime != ''">
+				and head.createTime ${queryTimeOperator} #{queryTime}
+			</if>
+			<if test="sort != null and sort != ''">
+				order by ${sort}
+				<if test="dir != null and dir != ''">
+					${dir}
+				</if>
+			</if>
+		</where> 
+			limit #{start},#{limit}
+	</select>
+	
+	<select id="searchOrder4FrontCount" resultType="java.lang.Integer">
+		select count(*)
+		from order_head head
+		<where>
+			head.isDelete = ${@com.ytoxl.module.yipin.order.dataobject.OrderHead@DELETE_NO}  
+			<if test="userId != null and userId != ''">
+				and head.userId = #{userId}
+			</if>
+			<if test="status != null and status != ''">
+				and head.status = #{status}
+			</if>
+			<if test="queryTime != null and queryTime != ''">
+				and head.createTime ${queryTimeOperator} #{queryTime}
+			</if>
+		</where> 
+	</select>
+	
+	<!-- 后台查询订单 -->
+	<select id="searchOrders4Manager" resultType="OrderHead">
+		select 
+			head.orderId,
+		    head.orderNo,
+		    head.userId,
+		    head.status,
+		    head.paymentAmount,
+		    head.originalAmount,
+		    head.hasInvoice,
+		    head.invoiceTitle,
+		    head.payTime,
+		    head.accountId,
+		    head.accountInfo,
+		    head.ipAddress,
+		    head.payType,
+		    head.payStatus,
+		    head.createTime,
+		    head.updateTime,
+		    GROUP_CONCAT(oi.orderSource ORDER BY oi.orderSource) AS orderSource
+		FROM order_head head
+		JOIN order_address_item oai on oai.orderId = head.orderId 
+		JOIN order_address oa on oai.orderAddressId = oa.orderAddressId
+		JOIN order_item oi on oai.orderItemId = oi.orderItemId 
+		<if test="sellerId != null and sellerId != ''">
+			AND oi.sellerId = #{sellerId}
+		</if>
+		<if test="brandId != null and brandId != ''">
+			JOIN product_sku ps ON oi.productSkuId = ps.productSkuId
+			JOIN product p ON ps.productId = p.productId AND p.brandId = #{brandId}
+		</if>
+		<where>
+			<if test="status != null and status != ''">
+				and head.status = #{status}
+			</if>
+			<if test="beginTime != null and beginTime != ''">
+				AND DATE_FORMAT(head.createTime,"%Y-%m-%d") &gt;= #{beginTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND DATE_FORMAT(head.createTime,"%Y-%m-%d") &lt;= #{endTime}	
+			</if>
+			<if test="keywords != null and keywords != ''">
+				and (
+						head.orderNo like CONCAT('%',#{keywords},'%') 
+					OR oa.receiverName like CONCAT('%',#{keywords},'%')
+					<if test="sellerFlag != null and sellerFlag != ''">
+						OR oa.mobile like CONCAT('%',#{keywords},'%') 
+						OR oa.telephone like CONCAT('%',#{keywords},'%')
+					</if>
+				)
+			</if>
+		</where>
+		GROUP BY head.orderId
+		<if test="sort != null and sort != '' and dir != null and dir != ''">
+			ORDER BY ${sort} ${dir}
+		</if>
+		limit #{start},#{limit}
+	</select>
+	
+	<!-- 后台查询订单总数 -->
+	<select id="searchOrders4ManagerCount" resultType="java.lang.Integer">
+		select 
+			count(*)
+		FROM (
+			select 
+				head.orderId
+			FROM order_head head
+			JOIN order_address_item oai on oai.orderId = head.orderId 
+			JOIN order_address oa on oai.orderAddressId = oa.orderAddressId
+			JOIN order_item oi on oai.orderItemId = oi.orderItemId 
+			<if test="sellerId != null and sellerId != ''">
+				AND oi.sellerId = #{sellerId}
+			</if>
+			<if test="brandId != null and brandId != ''">
+				JOIN product_sku ps ON oi.productSkuId = ps.productSkuId
+				JOIN product p ON ps.productId = p.productId AND p.brandId = #{brandId}
+			</if>
+			<where>
+				<if test="status != null and status != ''">
+					and head.status = #{status}
+				</if>
+				<if test="beginTime != null and beginTime != ''">
+					AND DATE_FORMAT(head.createTime,"%Y-%m-%d") &gt;= #{beginTime}
+				</if>
+				<if test="endTime != null and endTime != ''">
+					AND DATE_FORMAT(head.createTime,"%Y-%m-%d") &lt;= #{endTime}	
+				</if>
+				<if test="keywords != null and keywords != ''">
+					and (
+						   head.orderNo like CONCAT('%',#{keywords},'%') 
+					 	OR oa.receiverName like CONCAT('%',#{keywords},'%')
+						<if test="sellerFlag != null and sellerFlag != ''">
+							OR oa.mobile like CONCAT('%',#{keywords},'%') 
+							OR oa.telephone like CONCAT('%',#{keywords},'%')
+						</if>
+					)
+				</if>
+			</where>
+			GROUP BY head.orderId
+		) A
+	</select>
+  	
+  	<!-- 根据id查询订单明细 -->
+	<select id="getOrderById" parameterType="integer" resultType="OrderHead">
+		SELECT
+			orderId,
+		    orderNo,
+		    userId,
+		    status,
+		    paymentAmount,
+		    originalAmount,
+		    hasInvoice,
+		    invoiceTitle,
+		    payTime,
+		    accountId,
+		    accountInfo,
+		    ipAddress,
+		    payType,
+		    payStatus,
+		    createTime,
+		    updateTime
+		FROM order_head head
+		WHERE head.orderId = #{orderId}
+  	</select>
+  	
+  	<!-- 查询导出订单(非退货订单) -->
+  	<select id="listOrders" parameterType="map" resultType="com.ytoxl.module.yipin.order.dataobject.resultmap.OrderExportModel">
+  		SELECT DISTINCT  
+  			oh.orderId,
+  			oa.orderAddressId,
+  			oh.orderNo,
+  			oa.packageNo,
+  			oh.status AS `orderStatus`,
+  			oa.isReceive AS `packageStatus`,
+  			u.username,
+  			b.name AS `brandName`,
+  			oi.productName,
+  			oai.assignCount as `num`,
+  			oi.unitPrice,
+			oa.receiverName,
+			oa.receiveAddress,
+			oa.postCode,
+			oa.telephone,
+			oa.mobile,
+			oh.invoiceTitle,
+			ps.internationalCode,
+			ps.skuCode,
+			oh.createTime AS `orderCreateTime`,
+			oh.payTime
+		FROM order_head oh
+		LEFT JOIN order_item oi ON oh.orderId = oi.orderId	
+		LEFT JOIN order_address oa ON oh.orderId = oa.orderId
+		INNER JOIN order_address_item oai  on oai.orderId = oh.orderId and oai.orderItemId = oi.orderItemId and oai.orderAddressId = oa.orderAddressId
+		LEFT JOIN product_sku ps ON oi.productSkuId = ps.productSkuId
+		LEFT JOIN product p ON ps.productId = p.productId
+		LEFT JOIN brand b ON p.brandId = b.brandId
+		LEFT JOIN USER u ON p.userId = u.userId
+		<where> 
+			<if test="sellerId != null and sellerId != ''">
+				and oi.sellerId = #{sellerId}
+			</if>
+			<if test="brandId != null and brandId != ''">
+				and b.brandId = #{brandId}
+			</if>
+			<if test="status!=null and status !=''">
+				and oh.status = #{status}
+			</if>
+			<if test="beginTime != null and beginTime != ''">
+				AND DATE_FORMAT(oh.createTime,"%Y-%m-%d") &gt;= #{beginTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND DATE_FORMAT(oh.createTime,"%Y-%m-%d") &lt;= #{endTime}	
+			</if>
+			<if test="keywords != null and keywords != ''">
+				and (oh.orderNo like CONCAT('%',#{keywords},'%') 
+				OR oa.receiverName like CONCAT('%',#{keywords},'%') 
+					<if test="sellerFlag != null and sellerFlag != ''">
+						OR oa.telephone like CONCAT('%',#{keywords},'%') 
+						OR oa.mobile like CONCAT('%',#{keywords},'%') 
+					</if>
+					)
+			</if>
+		</where>
+		order by oh.orderId DESC,oa.orderAddressId ASC
+  	</select>
+  	
+  	<!-- 查询导出订单(退货订单) -->
+  	<select id="listOrders4Return" parameterType="map" resultType="com.ytoxl.module.yipin.order.dataobject.resultmap.OrderExportModel">
+  		SELECT DISTINCT  
+  			oh.orderId,
+  			oa.orderAddressId,
+  			oh.orderNo,
+  			oa.packageNo,
+  			oh.status AS `orderStatus`,
+  			oa.isReceive AS `packageStatus`,
+  			u.username,
+  			b.name AS `brandName`,
+  			oi.productName,
+  			oai.assignCount as `num`,
+  			oi.unitPrice,
+			oa.receiverName,
+			oa.receiveAddress,
+			oa.postCode,
+			oa.telephone,
+			oa.mobile,
+			oh.invoiceTitle,
+			ps.internationalCode,
+			ps.skuCode,
+			oh.createTime AS `orderCreateTime`,
+			oh.payTime
+		FROM order_refund refund
+		INNER JOIN order_head oh on refund.orderId = oh.orderId 
+		INNER join order_address_item oai on oh.orderId = oai.orderId
+		INNER JOIN order_item oi ON oai.orderItemId = oi.orderItemId	
+		INNER JOIN order_address oa ON oai.orderAddressId = oa.orderAddressId
+		LEFT JOIN product_sku ps ON oi.productSkuId = ps.productSkuId
+		LEFT JOIN product p ON ps.productId = p.productId
+		LEFT JOIN brand b ON p.brandId = b.brandId
+		LEFT JOIN USER u ON p.userId = u.userId
+		<where> 
+			<if test="sellerId != null and sellerId != ''">
+				and oi.sellerId = #{sellerId}
+			</if>
+			<if test="brandId != null and brandId != ''">
+				and b.brandId = #{brandId}
+			</if>
+			<if test="returnStatus != null and returnStatus != ''">
+				<if test="refundStatus != null and refundStatus != ''">
+					and refund.status = #{refundStatus}
+				</if>
+			</if>
+			<if test="beginTime != null and beginTime != ''">
+				AND DATE_FORMAT(oh.createTime,"%Y-%m-%d") &gt;= #{beginTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND DATE_FORMAT(oh.createTime,"%Y-%m-%d") &lt;= #{endTime}	
+			</if>
+			<if test="keywords != null and keywords != ''">
+				and (oh.orderNo like CONCAT('%',#{keywords},'%') 
+				OR oa.receiverName like CONCAT('%',#{keywords},'%') 
+					<if test="sellerFlag != null and sellerFlag != ''">
+						OR oa.telephone like CONCAT('%',#{keywords},'%') 
+						OR oa.mobile like CONCAT('%',#{keywords},'%') 
+					</if>
+					)
+			</if>
+		</where>
+		order by oh.orderId DESC,oa.orderAddressId ASC
+  	</select>
+  	
+  	<!-- 根据订单id和当前用户id查找订单是否存在 -->
+  	<select id="findOrder" parameterType="map" resultType="OrderHead">
+  		select DISTINCT 
+  			head.orderId,
+  			head.status
+		from order_head head
+		LEFT JOIN order_item oi 
+		on head.orderId = oi.orderId
+		<where>
+			<if test="orderNo != null and orderNo != ''">
+				and head.orderNo = #{orderNo}
+			</if>
+			<if test="userId != null and userId != ''">
+				and oi.sellerId = #{userId}
+			</if>
+		</where>
+  	</select>
+  	
+  	<!-- 根据订单id更新订单表订单状态 -->
+  	<update id="updateOrderStatus" parameterType="map">
+  		UPDATE order_head
+		SET
+			status = #{status}
+		WHERE orderId = #{orderId}
+  	</update>
+  	  	
+  	<!-- 支付完成后，更新订单的相关信息(此方法只供支付调用) -->
+  	<update id="updateOrderByNetpay" parameterType="OrderHead">
+  		UPDATE order_head
+		SET
+			status = #{status},
+			payTime = CURRENT_TIMESTAMP,
+			accountId = #{accountId},
+			accountInfo = #{accountInfo},
+			payStatus = #{payStatus}
+		WHERE orderId = #{orderId}
+  	</update>
+  	
+  	<!-- 支付完成后，更新订单的相关信息(此方法只供支付调用) -->
+  	<update id="updateOrderPayAddress" parameterType="OrderHead">
+  		UPDATE order_head SET ipAddress = #{ipAddress} WHERE orderId = #{orderId}
+  	</update>
+  	
+  	<!-- 通过orderAddressId 查询订单头信息 -->
+  	<select id="getOrderHeadByOrderAddressId" resultType="OrderHead">
+  		select head.orderId,
+			   head.orderNo,
+			   head.userId,
+			   head.status,
+			   head.hasInvoice,
+			   head.invoiceTitle,
+			   head.paymentAmount,
+			   head.originalAmount,
+			   head.createTime,
+			   head.updateTime
+		from order_head head left join order_address addr
+			 on head.orderId = addr.orderId
+		where addr.orderAddressId = #{orderAddressId}
+  	</select>
+  	
+  	<!-- 查询订单表中所有1小时内未付款的订单Id -->
+  	<select id="listNotPayOrders" resultType="java.lang.Integer">
+  		SELECT oh.orderId FROM order_head oh
+		WHERE oh.STATUS = ${@com.ytoxl.module.yipin.order.dataobject.OrderHead@STATUS_WAITPAY}
+		AND TIMESTAMPDIFF(MINUTE,oh.createTime, NOW()) &gt;= ${@com.ytoxl.module.yipin.order.dataobject.OrderHead@defaultOrderCancelTime}
+		order by oh.orderId DESC
+		limit #{limit}
+  	</select>
+  	
+  	<!-- 查询订单已发货达到或超过15天还未收货的所有订单 -->
+  	<select id="listNotReceiveOrders" resultType="java.lang.Integer">
+  		SELECT oh.orderId FROM order_head oh 
+		WHERE oh.STATUS = ${@com.ytoxl.module.yipin.order.dataobject.OrderHead@STATUS_SEND} 
+		AND (DATEDIFF(CURRENT_TIMESTAMP,oh.createTime)+1) &gt;= ${@com.ytoxl.module.yipin.order.dataobject.OrderRefund@orderRefundDefaultTime}
+  	</select>
+  	
+  	<!-- 取消订单 待付款才能取消 -->
+  	<update id="updateCancelOrderByOrderId">
+  		update order_head
+  		set status = ${@com.ytoxl.module.yipin.order.dataobject.OrderHead@STATUS_CANCEL}
+  		where orderId = #{orderId}
+  			  and status = ${@com.ytoxl.module.yipin.order.dataobject.OrderHead@STATUS_WAITPAY}
+  	</update>
+  	
+  	<!-- 订单在待付款状态可以 逻辑删除订单 -->
+  	<update id="updateDelOrderByOrderId">
+  		update order_head
+  		set isDelete = ${@com.ytoxl.module.yipin.order.dataobject.OrderHead@DELETE_YES}
+  		where orderId = #{orderId}
+  			  and status = ${@com.ytoxl.module.yipin.order.dataobject.OrderHead@STATUS_CANCEL}
+  	</update>
+</mapper>

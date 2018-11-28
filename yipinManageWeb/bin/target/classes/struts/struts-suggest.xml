@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="suggest" extends="yipin-default" namespace="/admin/suggest">
+    	<action name="suggest-*" class="com.ytoxl.yipin.web.action.content.SuggestAction" 
+    		method="{1}">
+    	   <result name="result_tsukkomi">/WEB-INF/pages/suggest/searchSuggests.jsp</result>
+    	   <result name="result_discover">/WEB-INF/pages/suggest/searchSuggests_discover.jsp</result>
+    	   <result name="redirectSuggests" type="redirectAction">${nextAction}</result>
+    	</action>
+    	<action name="suggest-searchSuggests-sub" class="com.ytoxl.yipin.web.action.content.SuggestAction" 
+    		method="searchSuggests">
+    	   <result name="result_tsukkomi">/WEB-INF/pages/suggest/searchSuggests.jsp</result>
+    	   <result name="result_discover">/WEB-INF/pages/suggest/searchSuggests_discover.jsp</result>
+    	</action>
+	</package>
+</struts>

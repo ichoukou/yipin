@@ -1,0 +1,125 @@
+/* -------------------------------------------------
+ * 我的订单
+ * -------------------------------------------------
+*/
+.my_order{margin-top:10px;}
+.ucr_hd .on{color:#ff5500;}
+.uc_act{float:right;}
+.uc_act select{margin-left:10px;}
+.data_show{width:100%;}
+.data_show .data_tit{line-height:30px;}
+.data_show .col1{float:left;width:520px;padding-left:10px;}
+.data_show .col2{float:left;width:80px;}
+.data_show .col3{float:left;width:130px;}
+.data_show .col4{float:left;}
+.data_show .col4 .selectAll{float:left;margin:8px 5px 0 0;}
+.data_item{cursor:default;margin-bottom:10px;}
+.data_con{border:1px solid #cccccc;display:none;}
+.data_con .uf_item{border-bottom:1px solid #cccccc;}
+.data_con .nobm{border-bottom:0;}
+.data_con .loading{padding:25px 0;text-align:center;}
+.data_item .fold{background-color:#ededed;padding:12px 0;}
+.data_item .fold .checkbox{float:left;margin:2px 5px 0 0;}
+.data_item .ord_num{display:inline-block;background:url('../../images/ds_jiah.gif') left center no-repeat;padding-left:15px;}
+.data_item .change .ord_num{background:url('../../images/ds_jianh.gif') left center no-repeat;}
+.data_item .line{color:#1538ac;}
+.data_item .fold a{color:#1538ac;}
+.data_item .fold .col1 span{margin-right:25px;}
+.data_item .mny{color:#f63c30;}
+.data_item .unfold .pak_nm{text-align:right;}
+.data_item .unfold a{color:#1538ac;}
+.data_item .unfold td{padding:5px 0;}
+.data_item .fold .relative{float:left;width:214px;}
+/* 链接颜色 */
+.data_item .c1{color:#1538ac;}
+
+.package table td{padding:8px 0;border-top:1px dashed #b2b2b2;}
+.package table p a{color:#1538ac;}
+.package table p span{margin-right:15px;color:#b2b2b2;}
+/* 快递单信息申请 */
+.exp_wp{padding:10px 0;}
+.exp_wp li{overflow:hidden;*zoom:1;}
+.exp_wp li .tit{float:left;width:115px;text-align:right;}
+.exp_wp li .con{float:left;padding-left:10px;}
+.exp_wp li .con select{font-size:14px;float:left;margin:7px 5px 0 0;}
+.exp_wp li .con .red{float:left;line-height:34px;}
+.show_txt li{margin-bottom:8px;}
+.apply_info li{padding-top:30px;}
+.apply_info .tit{line-height:36px;}
+.apply_info .tit span{color:#e5372e;display:inline-block;vertical-align:middle;}
+.apply_info .con input{width:280px;border:1px solid #808080;border-radius:5px;padding:10px 0 10px 5px;}
+.apply_info .onError{position:absolute;top:-29px;right:3px;}
+.apply_info .onError-txt{height:28px;line-height:28px;display:block;border:1px solid #ffc67d;border-bottom:0;padding:0 18px 0 40px;background:#fff4e5 url(../../images/register/form_error.png) 10px center no-repeat;}
+.apply_btn{padding:40px 0 0 125px;}
+.apply_btn .submit,.apply_btn .cancle{display:inline-block;width:135px;height:40px;line-height:40px;text-align:center;font-size:20px;color:#ffffff;}
+.apply_btn .submit{background:url('../../images/btn/red.jpg') left center no-repeat;}
+.apply_btn .cancle{background:url('../../images/btn/gray.jpg') left center no-repeat;}
+/*退货记录item宽度*/
+.data_show .col6{float:left;padding-left:10px;width:110px;}
+.data_show .col7{float:left;padding-left:10px;width:85px;}
+.data_show .col8{float:left;padding-left:10px;width:130px;}
+.data_show .col9{float:left;padding-left:10px;width:200px;}
+.data_show .col10{float:left;padding-left:10px;width:70px;}
+.data_show .col11{float:left;padding-left:10px;width:140px;}
+.data_show .col12{float:left;padding-left:10px;width:80px;}
+
+.return_resa .tip_inner{width:208px;}
+.return_resa .tip_arrow{right:78px;}
+
+/*新增交易提醒、上下分页操作*/
+.rank_wrap{margin-top:10px;line-height:30px;}
+.rank_wrap .page_nav{float:right;_display:inline;margin-right:8px;width:60px;}
+.rank_wrap .o_tips{float:right;_display:inline;margin-right:30px;}
+.rank_wrap .o_tips a{color:#1538ac;}
+.rank_wrap .rank{float:left;background-color:#ffffcc;border:1px solid #ffcc00;padding:0 10px;}
+.rank_wrap .rank a{color:#0000ff;}
+.rank_wrap .rank span{margin-left:10px;}
+.rank_wrap .rank var{color:#cc0000;}
+
+/*批量操作*/
+.o_Ctrl{padding-left:10px;}
+.o_Ctrl span a{margin-right:8px;}
+.o_Ctrl span .pan_btn{display:inline-block;background-color:#f63c30;line-height:30px;padding:0 10px;color:#fff;font-size:14px;border-radius:5px;}
+.data_show .selectAll{float:left;margin:10px 5px 0 0;}
+
+/*显示商品列表*/
+.ps_proList{width:100%;}
+.ps_proList .c1{color:#4954ea;}
+.ps_proList .c2{color:#b2b2b2;}
+.ps_proList thead th{background-color:#ededed;line-height:30px;font-weight:normal;border-bottom:1px dashed #b2b2b2;padding-left:20px;text-align:left;}
+.ps_proList tbody td{padding:8px 0 8px 20px;}
+.ps_proList tfoot td{padding:8px 0 8px 20px;font-size:18px;background-color:#ededed;}
+.ps_proList .ps_pic{float:left;}
+.ps_proList .ps_tC{overflow:hidden;*zoom:1;padding:10px 0 0 10px;}
+.ps_proList .ip_txt{border:1px solid #cdcdcd;padding:5px;width:50px;}
+/*退货说明*/
+.return_sm{border:1px solid #cccccc;padding:5px;margin-top:8px;color:#a4a4a4;}
+
+/*退款记录*/
+.cause_msg{border:1px solid #ccc;color:#a4a4a4;padding:5px 0 5px 5px;height:68px;overflow-y:auto;margin-bottom:10px;}
+.return_th th{background:#ededed;height:40px;text-align:left;padding-left:15px;padding-right:10px;}
+.return_table{border:1px solid #ccc;}
+.return_table td{padding:12px 10px 12px 15px;border-bottom:1px dashed #ccc;}
+.return_table td a{color:#36c;}
+.return_table .td_a,.return_th .td_a{width:90px;}
+.return_table .td_b,.return_th .td_b{width:90px;}
+.return_table .td_c,.return_th .td_c{width:155px;}
+.return_table .td_d,.return_th .td_d{width:105px;}
+.return_table .td_e,.return_th .td_e{width:105px;}
+.return_table .td_f,.return_th .td_f{width:135px;}
+.c_cr1{width:100px;padding-left:10px;}
+.c_cr2{width:100px;padding-left:10px;}
+.c_cr3{width:140px;padding-left:10px;}
+.c_cr4{width:100px;padding-left:10px;}
+.c_cr5{width:100px;padding-left:10px;}
+.c_cr6{width:100px;padding-left:10px;}
+.c_cr7{width:200px;padding-left:10px;}
+
+/* 新增表格数据格式 */
+.TabStyle{border:1px solid #b2b2b2;border-bottom:0;}
+.TabStyle table th,.TabStyle table td{padding:5px 0 5px 10px;}
+.TabStyle table th{border-bottom:1px solid #b2b2b2;text-align:left;font-weight:normal;background-color:#ededed;}
+.TabStyle table td{border-bottom:1px solid #b2b2b2;}
+
+/* 无订单记录显示 */
+.noRecord{padding:20px 0 0 10px;*position:relative;}

@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ytoxl.module.yipin.order.mapper.OrderAddressMapper">
+	<!-- 新增一条记录 -->
+	<insert id="add" parameterType="OrderAddress" keyProperty="orderAddressId" useGeneratedKeys="true">
+		insert into order_address(
+			orderAddressId,
+			packageNo,
+			orderId,
+			packageTotalPrice,
+			isReceive,
+			receiverName,
+			regionId,
+			detailAddress,
+			receiveAddress,
+			mobile,
+			telephone,
+			postCode,
+			expressId,
+			expressName,
+			expressNo,
+			createTime
+		)
+		values(
+			#{orderAddressId},
+			#{packageNo},
+			#{orderId},
+			#{packageTotalPrice},
+			#{isReceive},
+			#{receiverName},
+			#{regionId},
+			#{detailAddress},
+			#{receiveAddress},
+			#{mobile},
+			#{telephone},
+			#{postCode},
+			#{expressId},
+			#{expressName},
+			#{expressNo},
+			CURRENT_TIMESTAMP
+		)
+	</insert>
+	
+	<!-- 删除一条数据 -->
+	<delete id="del" parameterType="java.lang.Integer">
+		DELETE FROM 
+			order_address 
+		WHERE 
+			orderAddressId = #{orderAddressId}
+  	</delete>
+  	
+  	<!-- 更新一条数据 -->
+  	<update id="update" parameterType="OrderAddress">
+		UPDATE 
+			order_address
+		SET
+			packageNo = #{packageNo},
+			orderId = #{orderId},
+			packageTotalPrice = #{packageTotalPrice},
+			isReceive = #{isReceive},
+			receiverName = #{receiverName},
+			regionId = #{regionId},
+			detailAddress = #{detailAddress},
+			receiveAddress = #{receiveAddress},
+			mobile = #{mobile},
+			telephone = #{telephone},
+			postCode = #{postCode},
+			expressId = #{expressId},
+			expressName = #{expressName},
+			expressNo = #{expressNo},
+			sendProductTime = #{sendProductTime},
+			updateTime = CURRENT_TIMESTAMP
+		WHERE 
+			orderAddressId = #{orderAddressId}
+  	</update>
+  	
+  	<!-- 查询一条数据 -->
+  	<select id="get" parameterType="integer" resultType="OrderAddress">
+		SELECT
+			orderAddressId,
+			packageNo,
+			orderId,
+			packageTotalPrice,
+			isReceive,
+			receiverName,
+			regionId,
+			detailAddress,
+			receiveAddress,
+			mobile,
+			telephone,
+			postCode,
+			expressId,
+			expressName,
+			expressNo,
+			sendProductTime,
+			createTime,
+			updateTime
+		FROM order_address
+		WHERE 
+			orderAddressId = #{orderAddressId}
+  	</select>
+  	
+  	<!-- 通过orderId查询包裹总数量 -->
+	<select id="getOrderPackageNumByOrderId" resultType="java.lang.Integer">
+		select 
+			count(*)
+		FROM order_address address
+		WHERE 
+			address.orderId = #{orderId}
+	</select>
+	
+	<!-- 通过orderId查找包裹明细 -->
+	<select id="listOrderPackagesByOrderId" resultType="OrderAddress">
+		select 
+			addr.orderAddressId,
+			packageNo,
+			addr.orderId,
+			expressId,
+			expressName,
+			expressNo,
+			packageTotalPrice,
+			detailAddress,
+			receiveAddress,
+			createTime,
+			updateTime,
+			isReceive,
+			receiverName,
+			mobile,
+			sum(addrItem.assignCount)  as `skuCount`
+		FROM order_address addr 
+		inner join order_address_item addrItem on addr.orderAddressId = addrItem.orderAddressId
+		WHERE addr.orderId = #{orderId}
+		group by addrItem.orderAddressId
+	</select>
+	<!-- 根据订单id获取收货人信息 -->
+  	<select id="listOrderAddressByOrderId" parameterType="integer" resultType="OrderAddress">
+		SELECT
+			orderAddressId,
+			packageNo,
+			orderId,
+			packageTotalPrice,
+			isReceive,
+			receiverName,
+			regionId,
+			detailAddress,
+			receiveAddress,
+			mobile,
+			telephone,
+			postCode,
+			expressId,
+			expressName,
+			expressNo,
+			sendProductTime,
+			createTime,
+			updateTime
+		FROM order_address address
+		WHERE address.orderId = #{orderId}
+  	</select>
+  	
+  	<!-- 根据包裹id查询包裹信息 -->
+  	<select id="getOrderAddressByOrderAddressId" resultType="OrderAddress">
+  		select 
+  			addr.orderAddressId,
+			addr.packageNo,
+			addr.regionId,
+			addr.receiverName,       
+			addr.detailAddress,       
+			addr.receiveAddress,
+			addr.packageTotalPrice,
+			addr.mobile,
+			addr.telephone,
+			addr.postCode,
+			addr.expressId,
+			addr.expressName,
+			addr.expressNo,
+			addr.sendProductTime,              
+			addr.receiveProductTime,
+			addr.isReceive,             
+			head.orderId			as	`orderHead.orderId`,       
+			head.orderNo			as	`orderHead.orderNo`,       
+			head.status				as	`orderHead.status`,
+			head.payTime			as  `orderHead.payTime`,       
+			head.payType			as	`orderHead.payType`,
+			head.payStatus			as  `orderHead.payStatus`,
+			head.hasInvoice			as	`orderHead.hasInvoice`,
+			head.invoiceTitle		as	`orderHead.invoiceTitle`,
+			head.orderRemark		as  `orderHead.orderRemark`,
+			head.createTime			as  `orderHead.createTime`,
+			head.updateTime			as 	`orderHead.updateTime`,
+			express.websiteUrl		as	`express.websiteUrl`
+		FROM order_address addr 
+		left join order_head head on head.orderId = addr.orderId
+		left join express express on addr.expressId = express.expressId
+		WHERE 
+			addr.orderAddressId = #{orderAddressId}
+  	</select>
+
+  	<!-- 根据订单id和包裹号查询包裹信息 -->
+  	<select id="getOrderAddressByOrderPackageNo" parameterType="map" resultType="OrderAddress">
+  		SELECT
+			orderAddressId,
+			packageNo,
+			orderId,
+			packageTotalPrice,
+			isReceive,
+			receiverName,
+			regionId,
+			detailAddress,
+			receiveAddress,
+			mobile,
+			telephone,
+			postCode,
+			expressId,
+			expressName,
+			expressNo,
+			createTime,
+			updateTime
+		FROM order_address
+		WHERE orderId = #{orderId} 
+			and packageNo = #{packageNo}
+  	</select>
+  	
+  	<!-- 更新包裹快递数据 -->
+  	<update id="updateOrderAddressByOrderAddressId" parameterType="OrderAddress">
+		UPDATE 
+			order_address
+		SET
+			expressId = #{expressId},
+			expressName = #{expressName},
+			expressNo = #{expressNo},
+			isReceive = ${@com.ytoxl.module.yipin.order.dataobject.OrderAddress@STATUS_NOTRECEIVE},
+			sendProductTime = CURRENT_TIMESTAMP,
+			updateTime = CURRENT_TIMESTAMP
+		WHERE 
+			orderAddressId = #{orderAddressId}
+  	</update>
+  	
+  	<!-- 根据订单id查找未发货包裹数量 -->
+  	<select id="countNotSendProductPackageNum" resultType="java.lang.Integer">
+  		select 
+  			count(*) 
+  		from order_address address
+  		where (address.expressNo is null or address.expressNo = '')
+  			and address.orderId = #{orderId}
+  	</select>
+  	
+  	<!-- 根据订单id更新包裹状态信息 -->
+  	<update id="updateOrderPackageStatus" parameterType="map">
+  		UPDATE 
+  			order_address
+		SET
+			isReceive = #{packageStatus},
+			updateTime = CURRENT_TIMESTAMP
+		WHERE 
+			orderId = #{orderId}
+  	</update>
+  	
+  	<!-- 根据orderId查询包裹数量 -->
+  	<select id="countProductPackageNumByOrderId" resultType="java.lang.Integer">
+  		select count(*) FROM order_address WHERE orderId = #{orderId}
+  	</select>
+  	
+  	<!-- 根据orderId查询也收货包裹数量 -->
+  	<select id="countReceiveProductPackageNumByOrderId" resultType="java.lang.Integer">
+  		select count(*)
+  		FROM order_address 
+  		WHERE orderId = #{orderId} 
+ 			and isReceive = ${@com.ytoxl.module.yipin.order.dataobject.OrderAddress@STATUS_RECEIVED}
+  	</select>
+  	
+  	<!-- 根据orderAddressId 更新包裹收获状态 -->
+  	<update id="updateOrderPackageStatusByOrderAdderssId">
+  		update 
+  			order_address
+  		set 
+  			isReceive = #{status},
+  			receiveProductTime = CURRENT_TIMESTAMP,
+  			updateTime = CURRENT_TIMESTAMP
+  		WHERE 
+  			orderAddressId = #{orderAddressId}
+  	</update>
+  	
+  	<!-- 根据包裹发货时间，查询超过15天的包裹 -->
+  	<select id="listOrderPackagesBySendTime" resultType="OrderAddress">
+  		select oa.orderId,oa.orderAddressId
+		from order_head oh 
+		INNER JOIN order_address oa
+		on oh.orderId = oa.orderId
+		where oh.`status` in (${@com.ytoxl.module.yipin.order.dataobject.OrderHead@STATUS_WAITSEND},${@com.ytoxl.module.yipin.order.dataobject.OrderHead@STATUS_SEND})
+		and oa.isReceive = ${@com.ytoxl.module.yipin.order.dataobject.OrderAddress@STATUS_NOTRECEIVE}
+		and (DATEDIFF(CURRENT_TIMESTAMP,oa.sendProductTime)+1) &gt;= ${@com.ytoxl.module.yipin.order.dataobject.OrderRefund@orderRefundDefaultTime}
+		order by oh.orderId DESC
+		limit #{limit}
+  	</select>
+  	
+  	<!-- 根据订单id统计未收货的包裹数 -->
+  	<select id="countNotReceivePackageNumByOrderId" resultType="java.lang.Integer">
+  		select count(*) 
+  		from order_address oa
+  		where oa.isReceive = ${@com.ytoxl.module.yipin.order.dataobject.OrderAddress@STATUS_NOTRECEIVE}
+  		and oa.orderId = #{orderId}
+  	</select>
+  	
+  	<!-- 根据expressId和expressNo查询是否存在重复快递单号 -->
+  	<select id="getExpressNOCountByExpressIdAndExpressNo" resultType="java.lang.Integer">
+  		select count(*) from order_address oa
+  		where oa.expressId = #{expressId} and oa.expressNo = #{expressNo}
+  	</select>
+  	
+  	<!-- 根据订单Id查询订单收货人信息 -->
+  	<select id="getOrderAddressByOrderId" resultType="OrderAddress">
+  		SELECT
+			orderAddressId,
+			packageNo,
+			orderId,
+			packageTotalPrice,
+			isReceive,
+			receiverName,
+			regionId,
+			detailAddress,
+			receiveAddress,
+			mobile,
+			telephone,
+			postCode,
+			expressId,
+			expressName,
+			expressNo,
+			createTime
+		FROM order_address
+		WHERE orderId = #{orderId}
+		limit 1
+  	</select>
+  	
+  	<!-- 根据orderAddressId 批量跟新包裹状态 -->
+  	<update id="updateBathOrderPacekageStatus">
+  		update 
+  			order_address addr
+  		set 
+  			addr.isReceive = #{status},
+  			addr.receiveProductTime = CURRENT_TIMESTAMP,
+  			addr.updateTime = CURRENT_TIMESTAMP
+  		<where>
+  			addr.orderAddressId in
+  			<foreach collection="orderAddressIds" item="item" index="index" open="(" separator="," close=")">
+  				#{item}
+  			</foreach>
+  		</where>
+  	</update>
+</mapper>

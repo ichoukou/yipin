@@ -1,0 +1,41 @@
+/* -------------------------------------------------
+ * 我的订单
+ * -------------------------------------------------
+*/
+.my_order{margin-top:10px;}
+.uc_act{float:right;}
+.uc_act select{margin-left:10px;}
+.data_item{margin-bottom:10px;}
+.data_con{border:1px solid #cccccc;overflow:hidden;display:block;}
+.data_con .uf_item{border-bottom:1px solid #cccccc;margin-bottom:-1px;}
+.data_item .ord_num{display:inline-block;background:url('../../images/ds_jiah.gif') left center no-repeat;padding-left:15px;}
+.data_item .change .ord_num{background:url('../../images/ds_jianh.gif') left center no-repeat;}
+.data_item .line{margin:0 8px;color:#1538ac;}
+.data_item .mny{color:#f63c30;}
+.data_item .unfold .pak_nm{text-align:right;}
+.data_item .unfold a{color:#1538ac;}
+.data_item .unfold td{padding:5px 0;}
+.package .red{color: #f63c30;}
+.package table td{padding:8px 0;border-top:1px dashed #b2b2b2;}
+.package table p a{font-size:15px;color:#4d4d4d;}
+.package table p span{margin-right:15px;color:#b2b2b2;}
+.package table .pack_box{text-align:center;}
+.package table .pack_hd ul li{float:left;padding:3px 0 0 108px;width:70px;}
+.package table .pack_hd ul li span{display: block;}
+.package table .pack_hd ul li .color{color: #B2B2B2;}
+.total{background: #ededed;text-align: right;padding:10px 18px 0 0;}
+.total .rental{color:#f63c30; font-size: 25px; font-weight: 700; }
+.total .red i{font-weight: 100; font-size: 12px;}
+.detail table{width:100%;}
+.detail .wl_wp{border: 1px solid #cccccc;}
+.detail table th{background: #ededed;text-align: left;height: 26px;}
+.detail table th,.detail table td{padding-left:10px;}
+.detail table td{height: 26px; padding: 5px 0 5px 10px;border-top:1px dashed #ccc;}
+.detail_wp{border: 1px solid #cccccc;margin-top: 10px;}
+.detail_wp .detail_con{line-height: 25px; padding: 10px; border-bottom: 1px dotted #cccccc;}
+.detail_wp .detail_last{border-bottom: none;}
+.blue a{color:#2331e6; text-decoration: underline;}
+.detail table .width_1{width:170px;}
+.detail table .width_2{width:543px;}
+/*订单详情-物流信息ajax>loading*/
+.wl_wp .loading{text-align:center;border:1px solid #cccccc;padding:20px 0;}

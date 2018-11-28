@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ytoxl.module.yipin.content.mapper.AdvPositionMapper">
+	<sql id="selectPosition">
+		select 
+			p.positionId,
+			p.positionName,
+			p.createUserId,
+			p.createTime,
+			p.updateTime,
+			p.height,
+			p.width,
+			p.code
+    	from position p
+	</sql>
+	<select id="listPosition" resultType="AdvPosition">
+		<include refid="selectPosition"/>
+	</select>
+	<insert id="add"  useGeneratedKeys="true"  keyProperty="positionId"   parameterType="AdvPosition">
+		insert into 
+			position (
+			 positionId,
+			 positionName,
+			 height,
+			 width,
+			 code,
+			 createUserId,
+			 createTime,
+			 updateTime
+			) 
+			values (
+			 DEFAULT,
+			 #{positionName},
+			 #{height},
+			 #{width},
+			 #{code},
+			 #{createUserId},
+			 CURRENT_DATE,
+			 CURRENT_DATE )
+	</insert>
+	<select id="getPositionByCode" resultType="AdvPosition" parameterType="java.lang.String">
+		<include refid="selectPosition"/>
+		<where>
+			p.code=#{code}
+		</where>
+	</select>
+</mapper>

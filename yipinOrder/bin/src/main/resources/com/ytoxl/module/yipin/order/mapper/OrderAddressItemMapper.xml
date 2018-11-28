@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ytoxl.module.yipin.order.mapper.OrderAddressItemMapper">
+	<!-- 新增一条记录 -->
+	<insert id="add" parameterType="OrderAddressItem" keyProperty="orderAddressItemId" useGeneratedKeys="true">
+		insert into order_address_item(
+			orderAddressItemId,
+			orderAddressId,
+			orderId,
+			orderItemId,
+			productSkuId,
+			assignCount
+		)
+		values(
+			#{orderAddressItemId},
+			#{orderAddressId},
+			#{orderId},
+			#{orderItemId},
+			#{productSkuId},
+			#{assignCount}
+		)
+	</insert>
+
+	<!-- 删除一条记录 -->
+	<delete id="del" parameterType="java.lang.Integer">
+		DELETE FROM 
+			order_address_item 
+		WHERE 
+			orderAddressItemId = #{orderAddressItemId}
+	</delete>
+	
+	<!-- 更新一条记录 -->
+	<update id="update" parameterType="OrderAddressItem">
+		UPDATE 
+			order_address_item
+		SET
+			orderAddressId = #{orderAddressId},
+			orderId = #{orderId},
+			orderItemId = #{orderItemId},
+			assignCount = #{assignCount}
+		WHERE 
+			orderAddressItemId = #{orderAddressItemId}
+	</update>
+	
+	<!-- 查询一条记录 -->
+	<select id="get" parameterType="integer" resultType="OrderAddressItem">
+		SELECT
+			orderAddressItemId,
+			orderAddressId,
+			orderId,
+			orderItemId,
+			assignCount
+		FROM order_address_item
+		WHERE 
+			orderAddressItemId = #{orderAddressItemId}
+	</select>
+	
+	<!-- 通过orderAddressId 查找包裹中商品的明细 -->
+	<select id="listOrderAddressItemByOrderAddressId" resultType="OrderAddressItem">
+		select 
+			item.orderItemId		as `orderItem.orderItemId`,
+			item.productSkuId		as `orderItem.productSkuId`,
+		    item.productName		as `orderItem.productName`,
+		    item.productProp		as `orderItem.productProp`,       
+		    item.imageUrls			as `orderItem.imageUrls`,       
+		    item.unitPrice			as `orderItem.unitPrice`,
+		    addrItem.assignCount,       
+		    addrItem.orderAddressId,       
+		    addrItem.orderId,       
+		    addrItem.orderAddressItemId
+		from order_address_item addrItem 
+		left join order_item item on addrItem.orderItemId = item.orderItemId
+		where 
+			addrItem.orderAddressId = #{orderAddressId}
+	</select>
+	
+	<!-- 通过orderId和OrderAddressId查询商品明细信息 -->
+	<select id="listOrderAddressItemByOrderIdAndOrderAddressId" resultType="OrderAddressItem">
+		SELECT
+			oai.orderAddressItemId,
+			oai.orderAddressId,
+			item.orderItemId,
+			oai.assignCount, 
+		    item.productSkuId,
+		    item.productName,
+		    item.unitPrice,
+		    item.marketPrice,
+		    item.sellerId,
+		    item.orderSource,
+		    b.name as brandName
+		FROM order_address_item oai
+		left join order_item item on item.orderId = oai.orderId and item.orderItemId = oai.orderItemId
+		left join product_sku psku on item.productSkuId = psku.productSkuId
+		left join product p on psku.productId = p.productId
+		left join brand b on p.brandId = b.brandId
+		WHERE oai.orderAddressId = #{orderAddressId}
+			and oai.orderId = #{orderId}
+	</select>
+
+	<!-- 通过退货id 获取订单明细的商家id -->
+	<select id="listOrderAddressItemByOrderRefundId" resultType="OrderAddressItem">
+		select 
+	    	addrItem.orderAddressId,
+	        item.orderItemId			as `orderItem.orderItemId`,
+	        item.sellerId				as `orderItem.sellerId`
+		from order_refund refund 
+		left join order_address addr on addr.orderAddressId = refund.orderAddressId     
+		left join order_address_item addrItem on addrItem.orderAddressId = addr.orderAddressId     
+		left join order_item item on addrItem.orderItemId = item.orderItemId 
+		where 
+			refund.orderRefundId = #{orderRefundId}
+	</select>
+</mapper>

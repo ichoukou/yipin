@@ -1,0 +1,18 @@
+/* -------------------------------------------------
+ * 确认订单
+ * -------------------------------------------------
+*/
+.comfirm{padding:120px 0 120px 100px;}
+.comfirm .red{color:#f63c30;}
+.status_show{padding-left:45px;background:url('../../images/success.gif') no-repeat;}
+.status_show .status_txt{font-size:16px;font-weight:bold;margin-bottom:8px;}
+.status_desc{margin:20px 0 20px 45px;}
+.pay_way_wp{margin-left:45px;}
+.pay_btn{margin:20px 0 0 45px;}
+.pay_btn a{background:url('../../images/btn/red.jpg') no-repeat;display:block;width:135px;height:40px;line-height:40px;text-align:center;color:#fff;}
+.confirmOrder_box{display:none;}
+.confirmOrder_box a{color:#36c;margin-left:5px;}
+.confirmOrder_box a:hover{color:#f90;}
+.confirmOrder_box p{line-height:2;}
+.success_box{width:250px;height:160px;background:url("../../images/success.png") right 0 no-repeat;padding-top:90px;}
+.failure_box{width:300px;height:160px;background:url("../../images/failure.png") right 0 no-repeat;padding-top:90px;padding-left:30px;}

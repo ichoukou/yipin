@@ -1,0 +1,10 @@
+/* -------------------------------------------------
+ * 友情链接
+ * -------------------------------------------------
+*/
+.links-wrap{margin-top: 35px;margin-bottom: 100px;}
+.links-wrap .tit{border-bottom:2px solid #f63c30;font-size: 30px;padding-left: 8px;text-align:center;}
+.links-wrap .tit .crumbs{font-size:12px;margin-top:25px;float:left;}
+.links-wrap .tit span{margin-left:-100px;}
+.links-wrap ul{padding-top: 5px;}
+.links-wrap ul li{float:left;width:178px;padding-left:12px;height:27px;line-height:27px;font-size:14px;margin-right:2px;border-bottom:2px dotted #e6e6e6;background: url('../../images/circle.gif') 2px center no-repeat;}

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="link" extends="yipin-default" namespace="/admin/link">
+		<action name="link-*" class="com.ytoxl.yipin.web.action.links.LinksAction"
+			method="{1}">
+			<result name="success">/WEB-INF/pages/links/searchLinks.jsp</result>
+			<result name="result" type="json"/>
+		</action>
+	</package>
+</struts>

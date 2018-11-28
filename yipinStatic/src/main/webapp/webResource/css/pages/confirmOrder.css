@@ -1,0 +1,25 @@
+/* -------------------------------------------------
+ * 确认订单
+ * -------------------------------------------------
+*/
+.comfirm{padding:120px 0 120px 300px;font-family:"微软雅黑";}
+.comfirm .red{color:#f63c30;}
+.comfirm .f20{font-size:20px;}
+.comfirm .f34{font-size:34px;}
+.comfirm .f30{font-size:30px;}
+.status_show{padding-left:70px;background:url('../../images/success.jpg') no-repeat;}
+.status_show .status_txt{font-size:34px;margin-bottom:8px;height:50px;line-height:50px;}
+.status_desc{margin:20px 0 20px 70px;font-size:14px;}
+.pay_way_wp{margin-left:70px;}
+.pay_way_wp img{border:1px solid #ccc;}
+.pay_btn{margin:20px 0 0 70px;}
+.paySuccess{margin-top:100px;}
+.pay_btn a{background:url('../../images/btn/clearing.png') no-repeat;display:inline-block;width:165px;height:50px;line-height:50px;font-size:24px;text-align:center;color:#fff;}
+.pay_btn a:hover{text-decoration:none;}
+#getBack{background:url('../../images/btn/getBack.jpg') no-repeat;margin-right:20px;}
+.confirmOrder_box{display:none;padding:10px 0;}
+.confirmOrder_box a{color:#36c;margin-left:5px;}
+.confirmOrder_box a:hover{color:#f90;}
+.confirmOrder_box p{line-height:2;}
+.success_box{width:250px;height:160px;background:url("../../images/success.png") right 0 no-repeat;padding-top:90px;}
+.failure_box{width:300px;height:160px;background:url("../../images/failure.png") right 0 no-repeat;padding-top:90px;padding-left:30px;}

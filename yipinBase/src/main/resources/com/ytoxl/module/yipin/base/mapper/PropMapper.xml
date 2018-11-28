@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ytoxl.module.yipin.base.mapper.PropMapper">
+	<resultMap id="PropRM" type="com.ytoxl.module.yipin.base.dataobject.Prop">
+		<result property="propId" column="PP_PROPID" />
+		<result property="name" column="PP_NAME" />
+		<result property="parentId" column="PP_PARENTID" />
+		<result property="code" column="PP_CODE" />
+		<result property="level" column="PP_LEVEL" />
+		<result property="rank" column="PP_RANK" />
+		<result property="createTime" column="PP_CREATETIME" />
+		<result property="updateTime" column="PP_UPDATETIME" />
+		<result property="status" column="PP_STATUS"/>
+	</resultMap>
+	<sql id="Prop_column">
+		<![CDATA[
+			PP.PROPID PP_PROPID,
+			PP.NAME PP_NAME,
+			PP.PARENTID PP_PARENTID,
+			PP.CODE PP_CODE,
+			PP.LEVEL PP_LEVEL,
+			PP.RANK PP_RANK,
+			PP.STATUS PP_STATUS
+		]]>
+	</sql>
+	<!-- 根据实体作为条件查询符合条件的信息集合 -->
+	<select id="listByProp" parameterType="com.ytoxl.module.yipin.base.dataobject.Prop"
+		resultMap="PropRM">
+			SELECT
+		<include refid="Prop_column" />
+		FROM 
+			PROP PP
+		WHERE 1 = 1 
+		<if test="name != null and name != ''">
+			AND NAME = #{name,jdbcType=VARCHAR}
+		</if>
+		<if test="parentId != null and parentId != ''">
+			AND PARENTID = #{parentId,jdbcType=NUMERIC}
+		</if>
+		<if test="code != null and code != ''">
+			AND CODE LIKE  CONCAT(#{code,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="level != null">
+			AND LEVEL = #{level,jdbcType=NUMERIC}
+		</if>
+		<if test="status != null and status != ''">
+			AND STATUS = #{status,jdbcType=NUMERIC}
+		</if>
+		ORDER BY RANK 
+		<if test="start != null and limit != null">
+			 LIMIT #{start}, #{limit} 
+		</if>
+	</select>
+	<!-- 根据实体作为条件查询符合条件的信息集合总数 -->
+	<select id="listCountByProp" parameterType="com.ytoxl.module.yipin.base.dataobject.Prop"
+		resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM 
+			PROP PP
+		WHERE 1 = 1 
+		<if test="name != null and name != ''">
+			AND NAME = #{name,jdbcType=VARCHAR}
+		</if>
+		<if test="parentId != null and parentId != ''">
+			AND PARENTID = #{parentId,jdbcType=NUMERIC}
+		</if>
+		<if test="code != null and code != ''">
+			AND CODE LIKE  CONCAT(#{code,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="level != null">
+			AND LEVEL = #{level,jdbcType=NUMERIC}
+		</if>
+		<if test="status != null and status != ''">
+			AND STATUS = #{status,jdbcType=NUMERIC}
+		</if>
+	</select>
+	<!-- 根据ID查询实体 -->
+	<select id="get" resultMap="PropRM">
+		SELECT
+		<include refid="Prop_column" />
+		FROM PROP PP
+		WHERE PROPID = #{propId,jdbcType=NUMERIC}
+	</select>
+	<!-- 根据CODE查询实体 -->
+	<select id="getByCode" resultMap="PropRM">
+		SELECT
+		<include refid="Prop_column" />
+		FROM PROP PP
+		WHERE PP.CODE = #{code,jdbcType=VARCHAR}
+	</select>
+	<!-- 根据ID删除实体 -->
+	<delete id="del">
+		DELETE FROM PROP WHERE PROPID =
+		#{propId,jdbcType=NUMERIC} 
+	</delete>
+	<!-- 根据编码修改当前区域状态及子集状态 -->
+	<update id="updateStatusByCode" parameterType="com.ytoxl.module.yipin.base.dataobject.Prop">
+		UPDATE PROP SET STATUS = #{status,jdbcType=NUMERIC} WHERE CODE LIKE  CONCAT(#{code,jdbcType=VARCHAR},'%')
+	</update>
+	<!-- 根据ID修改实体 -->
+	<update id="update" parameterType="com.ytoxl.module.yipin.base.dataobject.Prop">
+		UPDATE PROP SET
+		<if test="name != null and name != ''">
+			NAME = #{name,jdbcType=VARCHAR},
+		</if>
+		<if test="rank != null and rank != 0">
+			RANK = #{rank,jdbcType=NUMERIC},
+		</if>
+		<if test="status != null and status != 0">
+			STATUS = #{status,jdbcType=NUMERIC},
+		</if>
+		UPDATETIME = NOW()
+		WHERE PROPID = #{propId,jdbcType=NUMERIC}
+	</update>
+	<!-- 新增实体，编码规则为父级编码+"-"+实体ID -->
+	<insert id="add" parameterType="com.ytoxl.module.yipin.base.dataobject.Prop">
+		<selectKey resultType="java.lang.Integer" keyProperty="propId"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO PROP
+		(PROPID,NAME,
+		PARENTID,CODE,
+		LEVEL,RANK,STATUS,
+		CREATETIME,UPDATETIME)
+		SELECT IFNULL(MAX(PROPID),10000)+1,
+		#{name,jdbcType=VARCHAR},#{parentId,jdbcType=NUMERIC},
+		CONCAT(#{code,jdbcType=VARCHAR},'-',IFNULL(MAX(PROPID),10000)+1),
+		#{level,jdbcType=NUMERIC},#{rank,jdbcType=NUMERIC},1,NOW(),NOW() FROM PROP LIMIT 0,1 
+	</insert>
+	
+	<select id="getPropByIds" parameterType="String" resultType="Prop">
+		SELECT name,code,level,status,propId FROM prop WHERE propId IN
+		<foreach collection="array" item="id" open="(" separator="," close=")">
+  			#{id}
+  		</foreach>
+	</select>
+	
+	<!-- 通过子点节查询所有父节点 -->
+	<select id="listParentProps" resultType="Prop">
+		SELECT propId,name,code,level,status 
+		FROM prop WHERE code LIKE CONCAT(#{prefix}, '%') AND level &lt; #{level}
+	</select>
+</mapper>

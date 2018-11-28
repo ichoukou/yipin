@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ytoxl.module.yipin.order.mapper.OrderItemMapper">
+	<insert id="add" parameterType="OrderItem" keyProperty="orderItemId" useGeneratedKeys="true">
+		insert into order_item(
+			orderItemId,
+			orderId,
+			productSkuId,
+			sellerId,
+			productName,
+			unitPrice,
+			num,
+			marketPrice,
+			productProp,
+			orderSource,
+			imageUrls
+		)
+		values(
+			#{orderItemId},
+			#{orderId},
+			#{productSkuId},
+			#{sellerId},
+			#{productName},
+			#{unitPrice},
+			#{num},
+			#{marketPrice},
+			#{productProp},
+			#{orderSource},
+			#{imageUrls}
+		)
+	</insert>
+	
+	<!-- 删除一条数据 -->
+	<delete id="del" parameterType="java.lang.Integer">
+		DELETE FROM order_item WHERE orderItemId = #{orderItemId}
+  	</delete>
+  	
+  	<!-- 更新一条数据 -->
+  	<update id="update" parameterType="OrderItem">
+		UPDATE order_item
+		SET
+			orderId = #{orderId},
+			productSkuId = #{productSkuId},
+			productName = #{productName},
+			unitPrice = #{unitPrice},
+			num = #{num},
+			marketPrice = #{marketPrice},
+			productProp = #{productProp},
+			imageUrls = #{imageUrls}
+		WHERE orderItemId = #{orderItemId}
+  	</update>
+  	
+  	<!-- 查询一条数据 -->
+  	<select id="get" parameterType="integer" resultType="OrderItem">
+		SELECT
+			orderItemId,
+			orderId,
+			productSkuId,
+			productName,
+			unitPrice,
+			num,
+			marketPrice,
+			productProp,
+			imageUrls
+		FROM order_item
+		WHERE orderItemId = #{orderItemId}
+  	</select>
+	<select id="getOrderProductSkuNumByOrderId" resultType="java.lang.Integer">
+		select sum(item.num)
+		from order_item item
+		where item.orderId = #{orderId}
+	</select>
+
+	<!--根据订单id获取订单明细  -->
+  	<select id="listOrderItemsByOrderId" parameterType="integer" resultType="OrderItem">
+    	SELECT
+		  item.orderItemId,
+		  item.orderId,
+		  item.productSkuId,
+		  item.productName,
+		  item.unitPrice,
+		  item.num,
+		  item.marketPrice,
+		  item.productProp,
+		  item.imageUrls,
+		  item.sellerId,
+		  item.orderSource,
+		  b.name as brandName
+		FROM order_item item
+		left join product_sku psku on item.productSkuId = psku.productSkuId
+		left join product p on psku.productId = p.productId
+		left join brand b on p.brandId = b.brandId
+		where item.orderId = #{orderId}
+  	</select>
+  	
+  	<!-- 根据订单id获得订单商品skuId和商品数量 -->
+  	<select id="listOrderItemCancelNum" parameterType="integer" resultType="OrderItem">
+  		select oi.orderItemId,oi.productSkuId,oi.num
+		from order_item oi 
+		where oi.orderId = #{orderId}
+  	</select>
+</mapper>

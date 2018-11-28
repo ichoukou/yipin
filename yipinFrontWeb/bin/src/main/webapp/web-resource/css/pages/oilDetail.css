@@ -1,0 +1,75 @@
+/* -------------------------------------------------
+ * 详情块
+ * -------------------------------------------------
+*/
+/* 顶部导航 */
+.header_right li{position:relative;z-index:999;}
+.header_right li.on{background-color:#f63c30;}
+.header_right li.on a{color:#fff;}
+.header_right li.on i{visibility:visible;}
+.header_right li i{font-family:simsun;font-size:40px;line-height:normal;color:#f63c30;position:absolute;left:50%;bottom:-23px;margin-left:-20px;z-index:50;visibility:hidden;}
+.focus{position:relative;height:640px;background-color:rgba(165,165,165,.6);}
+.pro_show{width:100%;height:640px;}
+
+.pro_show .relative dl{position:absolute;left:0px;top:140px;color:#ebedef;}
+.pro_show .relative dl .f63c30{color:#f63c30;font-size:35px;}
+.pro_show .relative dt{font-size:35px;font-weight:normal;}
+.pro_show .relative dd{margin:15px 0;}
+.pro_show .relative dd p{margin-bottom:10px;}
+
+/* 上、下购买按钮 */
+#dBanner .pro_show dd a,.d_item .relative a{display:inline-block;width:185px;height:60px;line-height:60px;text-align:center;font-size:25px;color:#fff;background:url('../../images/btn/pro_btn_l.png') no-repeat;}
+
+/* 详情内容 */
+.prod_wp{background-color:#f0f0f0;}
+h2{font-size:36px;line-height:1.2;}
+h3{font-size:26px;}
+.bck1{padding:20px 0 40px;border-bottom:1px solid #ccc;}
+.bck1 h2,.effect h2,.trait h2{text-align:center;}
+.bck2 h2,.effect h2{font-size:40px;}
+.bck1 .fungus_introduce{padding:15px 0;font-size:14px;text-align:center;}
+.bck2{padding:23px 0 34px 10px;border-bottom:1px solid #ccc;}
+.bck2 .fungus_right{width:450px;padding:50px 0 0 25px;}
+.bck2 .fungus_right p{padding-top:30px;}
+.bck2 li{float:left;padding:25px 24px 0 0;font-size:14px;text-align:center;}
+.bck2 li p{padding-top:10px;}
+.bck2 li.p0{padding-right:0;}
+.bck3 h2{font-size:46px;}
+.bck3{padding:23px 0 34px 10px;border-bottom:1px solid #ccc;}
+.bck3 .fungus_right{width:450px;padding:50px 0 0 25px;}
+.bck3 .fungus_right p{padding-top:30px;}
+.bck3 .fungus_image{padding:0px 0 0 70px;}
+.effect{padding:30px 0 60px;text-align:center;border-bottom:1px solid #ccc;}
+.effect h2{padding-bottom:8px;}
+.effect .fungus_introduce{text-align:left;padding:8px 0 40px 115px;line-height:1.8;font-size:14px;}
+.trait{padding-bottom:60px;border-bottom:1px solid #ccc;}
+.trait h3{font-size:26px;padding:25px 0;text-align:center;}
+.trait ul li{float:left;width:475px;padding-right:50px;}
+.trait ul li.p0{padding-right:0;}
+.trait ul li p{margin-bottom:20px;}
+.trait ul li div{padding-left:15px;line-height:2;}
+.menu h3{text-align:center;}
+.menu {padding:20px 0 50px;border-bottom:1px solid #ccc;}
+.menu li{float:left;width:480px;padding-right:40px;_padding-right:39px;}
+.menu li.p0{padding-right:0;}
+.menu li .menu_data{padding:20px 0 5px 15px;line-height:1.8;}
+.menu li  .menu_msg{line-height:2;padding:15px 0 0 15px;}
+.prescription{padding:10px 0 30px;}
+.prescription li{padding:20px 42px 0 0;float:left;width:305px;}
+.prescription li.p0{padding-right:0;}
+.prescription li .menu_msg{padding:10px 0 0 15px;}
+.slogan{font-weight:bold;text-align:center;padding:20px 0;font-size:14px;}
+/* 吐槽区 */
+.d_tc{padding:16px 0;}
+.d_tc .tc_tit{margin-bottom:5px;}
+.d_tc .tc_tit .tc_tip{color:#f63c30;margin-left:15px;}
+.d_tc .tc_con .relative{width:692px;margin-right:10px;}
+.d_tc .tc_con textarea{width:670px;height:80px;padding:5px 10px;border-radius:5px;border:1px solid #808080;color:#b2b2b2;}
+.d_tc .tc_con a{display:inline-block;height:92px;line-height:92px;width:150px;border-radius:5px;text-align:center;color:#fff;background-color:#f63c30;font-size:25px;}
+.IE7relative{*position:relative;height:0;}
+.IE7relative #spitslotContentTip{*left:515px;*top:-121px;_top:-122px;*width:200px;}
+#mySpitslotForm .IE7static{*position:static;}
+#mySpitslotForm .fn_right{_margin-top:-90px;}
+/* 验证 */
+#spitslotContentTip{position:absolute;top:-29px;right:3px;}
+#spitslotContentTip .onError-txt{float:left;height:28px;line-height:28px;display:block;border:1px solid #ffc67d;border-bottom:0;padding:0 18px 0 40px;background:#fff4e5 url(../../images/register/form_error.png) 10px center no-repeat;}

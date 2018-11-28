@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ytoxl.module.yipin.base.mapper.SaleProductMapper">
+	<resultMap id="SaleProductRM"
+		type="com.ytoxl.module.yipin.base.dataobject.SaleProduct">
+		<result property="saleProductId" column="SP_SALEPRODUCTID" />
+		<result property="saleId" column="SP_SALEID" />
+		<result property="productId" column="SP_PRODUCTID" />
+		<result property="rank" column="SP_RANK" />
+		<result property="createTime" column="SP_CREATETIME" />
+		<result property="updateTime" column="SP_UPDATETIME" />
+		<result property="product.productId" column="P_PRODUCTID"/>
+		<result property="product.brandId" column="P_BRANDID"/>
+		<result property="product.userId" column="P_USERID"/>
+		<result property="product.name" column="P_NAME"/>
+		<result property="product.imageUrls" column="P_IMAGEURLS"/>
+		<result property="product.keyWord" column="P_KEYWORD"/>
+		<result property="product.status" column="P_STATUS"/>
+		<result property="userInfo.user.username" column="U_USERNAME"/>
+		<result property="userInfo.user.userId" column="U_USERID"/>
+		<result property="userInfo.userInfoId" column="UI_USERINFOID"/>
+	</resultMap>
+	<sql id="SaleProduct_column">
+		<![CDATA[
+			SP.SALEPRODUCTID SP_SALEPRODUCTID,
+			SP.SALEID SP_SALEID,
+			SP.PRODUCTID SP_PRODUCTID,
+			SP.RANK SP_RANK,
+			SP.CREATETIME SP_CREATETIME,
+			SP.UPDATETIME SP_UPDATETIME
+		]]>
+	</sql>
+	<!-- 根据销售ID查询其子表销售商品表集合 -->
+	<select id="listAllBySaleId" resultMap="SaleProductRM">
+			SELECT
+			<include refid="SaleProduct_column" />,
+			P.USERID P_USERID,
+			P.PRODUCTID P_PRODUCTID,
+			P.BRANDID P_BRANDID,
+			P.USERID P_USERID,
+			P.NAME P_NAME,
+			P.IMAGEURLS P_IMAGEURLS,
+			P.KEYWORD P_KEYWORD,
+			P.STATUS P_STATUS,
+			U.USERID U_USERID,
+			U.USERNAME U_USERNAME,
+			UI.USERINFOID UI_USERINFOID
+			FROM 
+				SALE_PRODUCT SP
+			INNER JOIN	
+				PRODUCT P ON SP.PRODUCTID = P.PRODUCTID
+			INNER JOIN 
+				USER U ON P.USERID=U.USERID
+			INNER JOIN 
+				USER_INFO UI ON UI.USERID = U.USERID
+			WHERE 
+				SP.SALEID = #{saleId,jdbcType=NUMERIC}
+	</select>
+	<!-- 根据销售商品实体作为条件查询符合条件集合 -->
+	<select id="listBySaleProduct" resultMap="SaleProductRM"
+		parameterType="com.ytoxl.module.yipin.base.dataobject.SaleProduct">
+		SELECT
+		<include refid="SaleProduct_column" />,
+		P.USERID P_USERID
+		FROM 
+			SALE_PRODUCT SP
+		INNER JOIN 
+			PRODUCT P 
+			ON SP.PRODUCTID = P.PRODUCTID
+		WHERE 1=1
+		<if test="saleId != null and saleId != ''">
+			AND SP.SALEID = #{saleId,jdbcType=NUMERIC}
+		</if>
+		<if test="productId != null and productId != ''">
+			AND SP.PRODUCTID = #{productId,jdbcType=NUMERIC}
+		</if>
+		<if test="rank != null and rank != ''">
+			AND SP.RANK = #{rank,jdbcType=NUMERIC}
+		</if>
+		<if test="saleProductId != null and saleProductId != ''">
+			AND SP.SALEPRODUCTID = #{saleProductId,jdbcType=NUMERIC}
+		</if>
+	</select>
+	<!-- 根据销售商品ID删除一条数据 -->
+	<delete id="deleteBySaleId">
+		DELETE FROM SALE_PRODUCT WHERE SALEID = #{saleId,jdbcType=NUMERIC}
+	</delete>
+	<!-- 根据销售商品ID修改销售商品数据 -->
+	<update id="updateSaleProductById" parameterType="com.ytoxl.module.yipin.base.dataobject.SaleProduct">
+		UPDATE SALE_PRODUCT SET
+		<if test="saleId != null and saleId != ''">
+			SALEID = #{saleId,jdbcType=NUMERIC},
+		</if>
+		<if test="productId != null and productId != ''">
+			PRODUCTID = #{productId,jdbcType=NUMERIC},
+		</if>
+		<if test="rank != null and rank != ''">
+			RANK = #{rank,jdbcType=NUMERIC},
+		</if>
+		<if test="saleProductId != null and saleProductId != ''">
+			SALEPRODUCTID = #{saleProductId,jdbcType=VARCHAR}
+		</if>
+		WHERE SALEPRODUCTID = #{saleProductId,jdbcType=VARCHAR}
+	</update>
+	<!-- 新增一条销售商品数据 -->
+	<insert id="addSaleProduct" parameterType="com.ytoxl.module.yipin.base.dataobject.SaleProduct">
+		<selectKey resultType="java.lang.Integer" keyProperty="saleProductId"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO SALE_PRODUCT
+		(SALEID,
+		PRODUCTID,RANK,
+		CREATETIME)
+		VALUES
+		(#{saleId,jdbcType=NUMERIC},
+		#{productId,jdbcType=NUMERIC},#{rank,jdbcType=NUMERIC},
+		now())
+	</insert>
+	<!--  根据一个商品id获取销售相关信息 -->
+	<select id="searchSaleByProductId" parameterType="integer" resultType="SaleProduct">
+		SELECT b.sellType AS 'sale.sellType',b.preSellTime AS 'sale.preSellTime',
+				b.status AS 'sale.status',a.saleId 
+		FROM sale_product a
+		INNER JOIN sale b ON a.saleId = b.saleId
+		WHERE b.status =${@com.ytoxl.module.yipin.base.dataobject.Sale@STATUS_RELEASE}
+		AND a.productId = #{productId}  
+	</select>
+	<!--  根据商品ids获取销售相关信息 -->
+	<select id="searchSaleByProductIds"  resultType="SaleProduct">
+		SELECT b.sellType AS 'sale.sellType',b.preSellTime AS 'sale.preSellTime',
+			b.status AS 'sale.status',a.saleId ,a.productId
+		FROM sale_product a
+		INNER JOIN sale b ON a.saleId = b.saleId
+		WHERE b.status =${@com.ytoxl.module.yipin.base.dataobject.Sale@STATUS_RELEASE}
+		AND a.productId In 
+		<foreach item="product" index="index" collection="list" open="(" separator="," close=")">
+			#{product.productId}
+		</foreach>  
+	</select>
+</mapper>

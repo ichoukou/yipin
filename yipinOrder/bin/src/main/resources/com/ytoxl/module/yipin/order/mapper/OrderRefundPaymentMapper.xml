@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ytoxl.module.yipin.order.mapper.OrderRefundPaymentMapper">
+	<insert id="add" parameterType="OrderRefundPayment" keyProperty="orderRefundPaymentId" useGeneratedKeys="true">
+		insert into order_refund_payment(
+			orderRefundPaymentId,
+			ordeRrefundId,
+			refundAmount,
+			originalAmount,
+			orderNetPayType,
+			batchNo,
+			refundAccount,
+			refundTime,
+			ipAddress,
+			refundReason,
+			status,
+			createTime
+		)
+		values(
+			#{orderRefundPaymentId},
+			#{ordeRrefundId},
+			#{refundAmount},
+			#{originalAmount},
+			#{orderNetPayType},
+			#{batchNo},
+			#{refundAccount},
+			#{refundTime},
+			#{ipAddress},
+			#{refundReason},
+			#{status},
+			CURRENT_TIMESTAMP
+		)
+	</insert>
+	
+	<!-- 删除一条数据 -->
+	<delete id="del" parameterType="java.lang.Integer">
+		DELETE FROM order_refund_payment WHERE orderRefundPaymentId = #{orderRefundPaymentId}
+  	</delete>
+  	
+  	<!-- 更新一条数据 -->
+  	<update id="update" parameterType="OrderRefundPayment">
+		UPDATE order_refund_payment
+		SET
+			ordeRrefundId = #{ordeRrefundId},
+			refundAmount = #{refundAmount},
+			originalAmount = #{originalAmount},
+			orderNetPayType = #{orderNetPayType},
+			batchNo = #{batchNo},
+			refundAccount = #{refundAccount},
+			refundTime = #{refundTime},
+			ipAddress = #{ipAddress},
+			refundReason = #{refundReason},
+			status = #{status},
+			updateTime = CURRENT_TIMESTAMP
+		WHERE orderRefundPaymentId = #{orderRefundPaymentId}
+  	</update>
+  	
+  	<!-- 查询一条数据 -->
+  	<select id="get" parameterType="integer" resultType="OrderRefundPayment">
+		SELECT
+			orderRefundPaymentId,
+			ordeRrefundId,
+			refundAmount,
+			originalAmount,
+			orderNetPayType,
+			batchNo,
+			refundAccount,
+			refundTime,
+			ipAddress,
+			refundReason,
+			status,
+			createTime,
+			updateTime
+		FROM order_refund_payment
+		WHERE orderRefundPaymentId = #{orderRefundPaymentId}
+  	</select>
+  	
+  	<update id="updateStatus" parameterType="OrderRefundPayment">
+        update order_refund_payment
+  		set
+  			status=#{status},
+  			refundTime=CURRENT_TIMESTAMP,
+  			ipAddress=#{ipAddress}
+		where orderRefundPaymentId = #{orderRefundPaymentId}
+  	</update>
+</mapper>

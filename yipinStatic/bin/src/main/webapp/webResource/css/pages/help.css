@@ -1,0 +1,28 @@
+﻿/* -------------------------------------------------
+ * help 帮助中心
+ * -------------------------------------------------
+*/
+/*左侧*/
+.content{margin:50px auto 75px;width:1000px;}
+.help_left{width:170px;}
+.help_left .hd{height:42px;line-height:42px;text-align:center;background:url("../../images/help_left.jpg") no-repeat;font-size:14px;color:#fff;}
+.help_left .bd{background:#ededed;}
+.help_left dl{padding:5px 0 5px 25px;border-bottom:1px solid #b3b3b3;}
+.help_left dt{font-size:14px;font-weight:bold;color:#f63c30;}
+.help_left dt,.help_left dd{padding:8px 0;line-height:1;}
+.help_left dd a:hover{padding-left:10px;}
+.help_left .on a{color:#f50;padding-left:10px;}
+.help_left .last{border-bottom:none;}
+/*右侧*/
+.help_right{width:810px;}
+.m5{margin:0 5px;font-family:"宋体";}
+.help_right .hd{padding-bottom:9px;border-bottom:3px solid #cccccc;text-align:center;}
+.help_right h2{font-size:30px;line-height:1.1;}
+.help_right .hd p{position:absolute;top:17px;left:0;_float:left;_position:static;_padding-top:20px;}
+.help_right .l30{line-height:40px;}
+.help_right .table th,.help_right .table td{height:28px;padding-left:6px;}
+.detailed_list{margin-top:7px;}
+.detailed_list p{line-height:1.8;}
+
+
+

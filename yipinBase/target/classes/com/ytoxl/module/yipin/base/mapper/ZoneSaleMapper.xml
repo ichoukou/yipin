@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ytoxl.module.yipin.base.mapper.ZoneSaleMapper">
+
+	<!-- 添加一条数据 -->
+	<insert id="add" useGeneratedKeys="true" keyProperty="zoneSaleId" parameterType="ZoneSale">
+		insert into
+		zone_sale(zoneId,productSkuId,rank,saleBeginTime,saleEndTime,createTime,productId,
+		creator,lastModifier)
+		values(#{zoneId},#{productSkuId},#{rank},#{saleBeginTime},#{saleEndTime},CURRENT_TIMESTAMP,
+		#{productId},#{creator},#{lastModifier})
+	</insert>
+	
+	<!-- 更新一条数据 -->
+	<update id="update" parameterType="ZoneSale">
+		update zone_sale b
+		set
+		b.zoneId=#{zoneId},
+		b.productSkuId=#{productSkuId},
+		b.rank=#{rank},
+		b.saleBeginTime=#{saleBeginTime},
+		b.saleEndTime=#{saleEndTime},
+		b.productId=#{productId},
+		b.lastModifier=#{lastModifier}
+		where
+		b.zoneSaleId=#{zoneSaleId}
+	</update>
+	
+	<!-- 根据专区id删除销售信息 -->
+	<delete id="remove" parameterType="Zone">
+		delete FROM zone_sale 
+		WHERE zoneId=#{zoneId}
+	</delete>
+	
+	<!-- 根据id删除销售信息 -->
+	<delete id="removeByZoneSale" parameterType="ZoneSale">
+		delete FROM zone_sale 
+		WHERE zoneSaleId=#{zoneSaleId}
+	</delete>
+	
+	<!-- 根据id查询销售信息 -->
+	<select id="get" resultType="ZoneSale">
+		SELECT zoneSaleId,zoneId,productSkuId,rank,saleBeginTime,saleEndTime,createTime,updateTime,productId,
+		creator,lastModifier
+		from zone_sale 
+		where zoneSaleId=#{zoneSaleId}
+	</select>
+	
+	<!-- 根据销售类型来查询销售 -->
+	<select id="listZoneSaleByZoneId" parameterType="java.lang.Integer" resultType="ZoneSale">
+		SELECT zoneSaleId,zoneId,productSkuId,rank,saleBeginTime,saleEndTime,createTime,updateTime,productId,
+		creator,lastModifier
+		from zone_sale 
+		where zoneId=#{zoneId}
+	</select>
+	
+	<!-- 根据商品ID查询销售商品权重排序-->	
+	<select id="getRankByProductId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		 SELECT z.rank FROM zone_sale z INNER JOIN product p
+		   on z.productId = p.productId
+           INNER JOIN brand b
+           ON p.brandId = b.brandId
+           INNER JOIN product_sku k
+           ON p.productId = k.productId
+           WHERE z.productId = #{productId} limit 1
+	</select>
+	
+	<!-- 根据商品ID查询销售商品权重排序-->	
+	<select id="getZoneSaleByProductId" parameterType="java.lang.Integer" resultType="ZoneSale">
+		 SELECT zoneSaleId,zoneId,productSkuId,rank,saleBeginTime,saleEndTime,createTime,updateTime,productId,
+		creator,lastModifier
+		from zone_sale WHERE productId = #{productId} limit 1
+	</select>
+	
+	<!-- 根据商品SKU查询销售商品权重排序-->	
+	<select id="getZoneByProductSku" parameterType="java.lang.Integer" resultType="ZoneSale">
+		 SELECT zoneSaleId,zoneId,productSkuId,rank,saleBeginTime,saleEndTime,createTime,updateTime,productId,
+		creator,lastModifier
+		from zone_sale WHERE productSkuId = #{productSkuId} limit 1
+	</select>
+	
+	<select id="getZoneSaleByZoneIdAndProductId" parameterType="ZoneSale" resultType="ZoneSale">
+		SELECT zoneSaleId,zoneId from zone_sale z where z.zoneId=#{zoneId} AND (z.productId=#{productId} or z.productSkuId=#{productSkuId}) limit 1
+	</select>
+	
+	<select id="getSpecialZoneSaleBySkuId" resultType="ZoneSale">
+		SELECT a.zoneSaleId, a.saleBeginTime, a.saleEndTime, 
+			b.zoneId AS `zone.zoneId`, b.name AS `zone.name` 
+		FROM zone_sale a 
+		INNER JOIN zone b ON a.zoneId = b.zoneId
+		WHERE a.productSkuId = #{skuId}
+			AND b.status = ${@com.ytoxl.module.yipin.base.dataobject.Zone@ZONE_STATUS_RELEASE}
+			AND b.zoneType = ${@com.ytoxl.module.yipin.base.dataobject.Zone@ZONE_TYPE_SPECIAL}
+	</select>
+	
+	<select id="listZoneSalesByProductIdZoneType" resultType="ZoneSale">
+		SELECT a.zoneSaleId, b.zoneId AS `zone.zoneId`, b.name AS `zone.name`  
+		FROM zone_sale a 
+		INNER JOIN zone b ON a.zoneId = b.zoneId
+		WHERE a.productId = #{productId}
+			AND b.zoneType = #{zoneType}
+			AND b.status = ${@com.ytoxl.module.yipin.base.dataobject.Zone@ZONE_STATUS_RELEASE}
+	</select>
+	
+	<!-- 根据首字符和专区ID查询专区销售(预售、普通)	-->
+	<select id="listZoneSaleByFirstCharAndZoneId" resultType="ZoneSale">
+		SELECT a.* FROM zone_sale a 
+		INNER JOIN product p ON a.productId = p.productId 
+		INNER JOIN brand   b ON p.brandId = b.brandId
+		WHERE a.zoneId = #{zoneId} AND b.firstChar = #{firstChar}
+	</select>
+	
+	<!-- 根据首字符和专区ID查询专区销售(抢购)	-->
+	<select id="listZoneSaleByFirstCharAndZoneIdQg" resultType="ZoneSale">
+		SELECT a.* FROM zone_sale a 
+		INNER JOIN product_sku k ON a.productSkuId = k.productSkuId 
+		INNER JOIN product p ON p.productId = k.productId
+		INNER JOIN brand  b ON p.brandId = b.brandId
+		WHERE a.zoneId = #{zoneId} AND b.firstChar = #{firstChar}
+	</select>
+	
+	<!-- 根据首字符和专区ID查询专区销售(抢购)	-->
+	<select id="getZoneSaleCountByZoneId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		SELECT count(zoneSaleId) FROM zone_sale a
+		WHERE a.zoneId = #{zoneId} limit 1
+	</select>
+	
+	
+	<!-- 根据商品ID获取排序号	-->
+	<select id="getRankByProductIdAndZoneId" resultType="java.lang.Integer">
+		SELECT rank FROM zone_sale a
+		WHERE a.zoneId = #{zoneId} AND a.productId=#{productId} limit 1
+	</select>
+</mapper>

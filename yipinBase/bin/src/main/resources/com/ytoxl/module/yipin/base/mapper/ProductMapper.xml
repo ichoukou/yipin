@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ytoxl.module.yipin.base.mapper.ProductMapper">
+<!-- 插入一条商品信息 -->
+	<insert id="add" parameterType="Product" keyProperty="productId" useGeneratedKeys="true">
+		INSERT INTO product 
+			(
+				brandId,
+				userId,
+				name,
+				isShowInventory,
+				description,
+				imageUrls,
+				status,
+				keyWord,
+				createTime
+			) VALUES (  
+				#{brandId},
+				#{userId},
+				#{name},
+				#{isShowInventory},
+				#{description},
+				#{imageUrls},
+				#{status},
+				#{keyWord},
+				CURRENT_TIMESTAMP
+			)                    
+	</insert>
+  	
+  	<!-- 修改商品信息 -->
+    <update id="update" parameterType="Product">
+		UPDATE product
+			SET
+				brandId = #{brandId},
+				name = #{name},
+				isShowInventory = #{isShowInventory},
+				description = #{description},
+				imageUrls = #{imageUrls},
+				status = #{status},
+				keyWord = #{keyWord}
+		WHERE productId = #{productId}
+    </update>
+  	
+    <!-- 查询一条卖家商品信息 -->
+    <select id="getProductByProductIdAndUserId" resultType="Product">
+    	SELECT * FROM product
+		WHERE productId = #{productId} AND userId = #{userId}
+    </select>
+    <!-- 根绝productskuid获取sku以及商品信息 -->
+	<select id="getProductSkuById" parameterType="Integer" resultType="ProductSku">
+		SELECT ps.productSkuId,ps.productId,ps.skuCode,ps.unitPrice,p.`name` AS 'product.name',
+			p.imageUrls AS 'product.imageUrls',ps.inventory,p.userId AS 'product.userId'
+		FROM product_sku ps 
+		INNER JOIN product p ON ps.productId = p.productId
+		WHERE ps.productSkuId = #{id} AND ps.isDelete = ${@com.ytoxl.module.yipin.base.dataobject.ProductSku@ISDELETE_NO}
+	</select>
+	
+	<select id="searchProductSkuDetail" parameterType="integer" resultType="ProductSku">
+  		SELECT 
+  			ps.unitPrice,ps.inventory,ps.internationalCode,
+  			ps.skuCode,ps.productSkuId 
+  		FROM product_sku ps WHERE ps.productId = #{productId} 
+  		AND ps.isDelete = ${@com.ytoxl.module.yipin.base.dataobject.ProductSku@ISDELETE_NO}
+  	</select>
+	
+  	<!-- 管理员查询商品信息-->
+  	<select id="searchProducts" parameterType="map" resultType="Product">
+  		SELECT p.productId,p.brandName AS 'brand.name',p.inventory,
+		  	p.name,p.imageUrls,p.status
+		FROM(
+		 	SELECT 
+		  		a.productId,b.name AS brandName,c.inventory,a.name,a.imageUrls,a.status
+			FROM product a
+			INNER JOIN brand b ON a.brandId = b.brandId and 
+				b.isForbidden=${@com.ytoxl.module.yipin.base.dataobject.Brand@ISFORBIDDEN_NO_FORBIDDEN}
+			INNER JOIN product_sku c ON a.productId = c.productId AND c.isDelete = ${@com.ytoxl.module.yipin.base.dataobject.ProductSku@ISDELETE_NO} 
+			<include refid="searchProductsCondition"/>
+		) p
+		<include refid="statusSelectCondition"/>		
+  		ORDER BY p.productId DESC
+	  	LIMIT #{start}, #{limit}
+  	</select>
+  	
+  	<!-- 管理员查询商品信息总数-->
+  	<select id="searchProductsCount" resultType="java.lang.Integer" parameterType="Product">
+  			SELECT p.productId,p.status,p.inventory
+  			FROM (
+	  			SELECT a.productId,a.status,c.inventory FROM product a
+				INNER JOIN brand b ON a.brandId = b.brandId and 
+					b.isForbidden=${@com.ytoxl.module.yipin.base.dataobject.Brand@ISFORBIDDEN_NO_FORBIDDEN}
+				INNER JOIN product_sku c ON a.productId = c.productId AND c.isDelete = ${@com.ytoxl.module.yipin.base.dataobject.ProductSku@ISDELETE_NO} 
+					<include refid="searchProductsCondition"/>
+			) p
+			<include refid="statusSelectCondition"/>
+  	</select>
+  	
+  
+	<!-- 根据商家ID查询审核通过且库存大于0的商品 -->
+	<select id="listPassProBySellerId" resultType="Product">
+		SELECT
+			P.PRODUCTID,
+			P.BRANDID,
+			P.USERID,
+			P.NAME,
+			P.IMAGEURLS,
+			STATUS 
+		FROM 
+			PRODUCT P 
+		INNER JOIN 
+			PRODUCT_SKU PS 
+		ON 
+			P.PRODUCTID =PS.PRODUCTID 
+		WHERE 
+			P.STATUS = ${@com.ytoxl.module.yipin.base.dataobject.Product@STATUS_PASS} 
+			AND PS.isDelete = ${@com.ytoxl.module.yipin.base.dataobject.ProductSku@ISDELETE_NO}
+		AND PS.INVENTORY > 0
+		AND P.USERID=#{sellerId}
+		AND P.BRANDID=#{brandId}
+	</select>
+  	  	<!-- 管理员查询商品列表where条件 -->
+  	<sql id="searchProductsCondition">
+  		<where>
+  			a.status IN (
+					 ${@com.ytoxl.module.yipin.base.dataobject.Product@STATUS_CHECK_PEND},
+					 ${@com.ytoxl.module.yipin.base.dataobject.Product@STATUS_PASS},
+					 ${@com.ytoxl.module.yipin.base.dataobject.Product@STATUS_NO_PASS})
+  			<if test="brandId!=null and brandId!=''">AND a.brandId = #{brandId}</if>
+  			<if test="reviewStatus!=null and reviewStatus!=''">AND a.status = #{reviewStatus}</if>
+  			<if test="name!=null and name!=''">
+  				AND (a.name like concat('%',#{name},'%') OR b.name like concat('%',#{name},'%')  OR c.skuCode  like concat('%',#{name},'%'))
+  			</if>
+  		</where>
+  	</sql>
+  	
+  	<!-- 查询一条商品信息 -->
+	<select id="get" parameterType="java.lang.Integer" resultType="Product">
+        SELECT 
+  			a.productId,b.name AS 'brand.name',a.description,a.remark,
+  			a.name,a.imageUrls,a.status,a.isShowInventory
+  		FROM product a
+			INNER JOIN brand b ON a.brandId = b.brandId 
+		WHERE a.productId = #{productId}
+  	</select>
+  	
+  	 <!-- 更新商品审核结果 -->
+    <update id="updateProductReviewResult" parameterType="Product">
+    	 UPDATE product 
+	        SET status = #{status}, remark = #{remark}
+	     WHERE productId = #{productId}
+    </update>
+    
+    <!-- 分页查询卖家商品信息-->
+  	<select id="searchSellerProducts" parameterType="map" resultType="Product">
+		SELECT p.productId,p.brandName AS 'brand.name',p.inventory,p.remark,p.name,p.imageUrls,p.status
+		FROM(
+			SELECT a.productId,b.name brandName,c.inventory,a.remark,a.name,a.imageUrls,a.status
+  			FROM product a
+			INNER JOIN brand b ON a.brandId = b.brandId and b.isForbidden=${@com.ytoxl.module.yipin.base.dataobject.Brand@ISFORBIDDEN_NO_FORBIDDEN}
+			INNER JOIN product_sku c ON a.productId = c.productId AND c.isDelete = ${@com.ytoxl.module.yipin.base.dataobject.ProductSku@ISDELETE_NO}  
+			<include refid="searchSellerProductsCondition"/>
+		) p
+		<include refid="statusSelectCondition"/>
+  		ORDER BY p.productId DESC
+	  	LIMIT #{start}, #{limit}
+  	</select>
+  	
+  	<!--商家商品信息分页展示 -->
+  	<select id="searchSellerProductsCount" parameterType="map" resultType="Product">
+  			SELECT p.productId,p.inventory,p.status
+	  		FROM (
+		  		SELECT a.productId,c.inventory,a.status
+		  		FROM product a
+				INNER JOIN brand b ON a.brandId = b.brandId and b.isForbidden=${@com.ytoxl.module.yipin.base.dataobject.Brand@ISFORBIDDEN_NO_FORBIDDEN}
+				INNER JOIN product_sku c ON a.productId = c.productId  AND c.isDelete = ${@com.ytoxl.module.yipin.base.dataobject.ProductSku@ISDELETE_NO} 
+				<include refid="searchSellerProductsCondition"/>
+			) p
+		<include refid="statusSelectCondition"/>
+  	</select>
+  	
+  		<!-- 卖家查询商品列表where条件 -->
+  	<sql id="searchSellerProductsCondition">
+  		WHERE
+  			a.userId = #{sellerId}
+  			<if test="brandId!=null and brandId!=''">AND a.brandId = #{brandId}</if>
+  			<if test="reviewStatus!=null and reviewStatus!=''">AND a.status = #{reviewStatus}</if>
+  			<if test="name!=null and name!=''">
+  				AND (a.name like concat('%',#{name},'%') OR b.name like concat('%',#{name},'%') OR c.skuCode  like concat('%',#{name},'%'))
+  			</if>
+  			AND a.status IN (${@com.ytoxl.module.yipin.base.dataobject.Product@STATUS_DRAFT},
+					 ${@com.ytoxl.module.yipin.base.dataobject.Product@STATUS_CHECK_PEND},
+					 ${@com.ytoxl.module.yipin.base.dataobject.Product@STATUS_PASS},
+					 ${@com.ytoxl.module.yipin.base.dataobject.Product@STATUS_NO_PASS})
+  	</sql>
+  	
+  	<!-- 商品状态查询条件 -->
+  	<sql id="statusSelectCondition">
+  		<where>
+  		<if test="status!=null and status!=''">
+  			<choose>
+				<!--草稿 -->
+		  		<when test="status==@com.ytoxl.module.yipin.base.dataobject.Product@STATUS_DRAFT">
+		  			p.`status` IN (
+		  				${@com.ytoxl.module.yipin.base.dataobject.Product@STATUS_DRAFT},
+						${@com.ytoxl.module.yipin.base.dataobject.Product@STATUS_CHECK_PEND},
+						${@com.ytoxl.module.yipin.base.dataobject.Product@STATUS_NO_PASS}
+					) 
+				</when>
+				<!-- 待销售 -->
+				<when test="status == @com.ytoxl.module.yipin.base.dataobject.Product@STATUS_SELLD
+					">
+					p.`status` = ${@com.ytoxl.module.yipin.base.dataobject.Product@STATUS_PASS} 
+					AND NOT EXISTS (
+						SELECT a.saleId 
+						FROM sale_product a
+						INNER JOIN sale b ON a.saleId = b.saleId
+						WHERE b.status =${@com.ytoxl.module.yipin.base.dataobject.Sale@STATUS_RELEASE}
+						AND a.productId = p.productId 
+					)  
+				</when>
+				<!-- 预售 -->
+				<when test=" status == @com.ytoxl.module.yipin.base.dataobject.Product@STATUS_SELLY ">
+					p.`status` = ${@com.ytoxl.module.yipin.base.dataobject.Product@STATUS_PASS} 
+					AND p.inventory != 0 AND  EXISTS (
+						SELECT a.saleId 
+						FROM sale_product a
+						INNER JOIN sale b ON a.saleId = b.saleId
+						WHERE b.status =${@com.ytoxl.module.yipin.base.dataobject.Sale@STATUS_RELEASE}
+						AND a.productId = p.productId AND CURRENT_DATE &lt; b.preSellTime
+					) 
+				</when>
+				<!--销售中-->
+				<when test="status == @com.ytoxl.module.yipin.base.dataobject.Product@STATUS_SELL">
+					p.`status` = ${@com.ytoxl.module.yipin.base.dataobject.Product@STATUS_PASS} 
+					AND p.inventory != 0 AND  EXISTS (
+						SELECT a.saleId 
+						FROM sale_product a
+						INNER JOIN sale b ON a.saleId = b.saleId
+						WHERE b.status =${@com.ytoxl.module.yipin.base.dataobject.Sale@STATUS_RELEASE}
+						AND a.productId = p.productId AND (
+							b.sellType = ${@com.ytoxl.module.yipin.base.dataobject.Sale@TYPE_SELL} 
+							OR CURRENT_DATE &gt;= b.preSellTime)
+					)  
+				</when>
+				<!-- 售罄 -->
+				<when test="status == @com.ytoxl.module.yipin.base.dataobject.Product@STATUS_SELLOUT">
+					p.`status` = ${@com.ytoxl.module.yipin.base.dataobject.Product@STATUS_PASS}
+					AND p.inventory =0 AND EXISTS (
+						SELECT a.saleId 
+						FROM sale_product a
+						INNER JOIN sale b ON a.saleId = b.saleId
+						WHERE b.status =${@com.ytoxl.module.yipin.base.dataobject.Sale@STATUS_RELEASE}
+						AND a.productId = p.productId 
+					) 
+				</when>
+  			</choose>
+  		</if>
+		</where>
+  	</sql>
+	
+  	
+  	<!-- 更新商品状态 -->
+	<update id="updateProductStatus" parameterType="Product">
+        UPDATE product 
+        	SET status = #{status}
+        WHERE productId = #{productId} AND userId = #{userId}
+    </update>
+  	
+    <!-- 根据productId查询商品SKU选项数据 -->
+  	<select id="listProductSkuOptionsByProductId" parameterType="java.lang.Integer" resultType="SkuOption">
+  		SELECT DISTINCT d.skuOptionId, d.skuOptionName
+		FROM product_sku a, 
+			product_sku_option_value b, 
+			sku_option_value c,
+			sku_option d
+		WHERE a.productId = #{productId}
+			AND a.isDelete = ${@com.ytoxl.module.yipin.base.dataobject.ProductSku@ISDELETE_NO}
+			AND a.productSkuId = b.productSkuId
+			AND b.skuOptionValueId = c.skuOptionValueId
+			AND c.skuOptionId = d.skuOptionId
+  	</select>
+  	
+  	<!-- 根据skuOptionId查询商品SKU选项值数据 -->
+  	<select id="listProductSkuOptionValuesBySkuOptionId" resultType="SkuOptionValue">
+  		SELECT DISTINCT a.skuOptionValueId,
+  				IFNULL(a.overrideSkuOptionValue ,b.skuOptionValue) AS skuOptionValue,
+  				IF(a.overrideSkuOptionValue IS NULL, '0', '1') AS overrideFlag
+		FROM 
+			product_sku_option_value a, 
+			sku_option_value b,
+			sku_option c,
+			product_sku d
+		WHERE b.skuOptionId = #{skuOptionId}
+			AND a.skuOptionValueId = b.skuOptionValueId
+			AND b.skuOptionId = c.skuOptionId
+			AND d.productSkuId = a.productSkuId
+			AND d.productId = #{productId}
+			AND d.isDelete = ${@com.ytoxl.module.yipin.base.dataobject.ProductSku@ISDELETE_NO}
+  	</select>
+
+	<!-- 查询售卖商品集合 -->
+	<select id="listProductsByBrandIdAndStatus" parameterType="java.lang.Integer"
+		resultType="Product">		
+		   SELECT p.*,g.inventory,g.unitPrice,
+		   g.productSkuId,g.skuCode,
+		   g.skuCode,s.rank FROM product p
+           INNER JOIN sale_product s
+           ON p.productId = s.productId
+           INNER JOIN sale b 
+           ON s.saleId = b.saleId
+           INNER JOIN product_sku g
+           ON p.productId = g.productId
+           WHERE p.status = ${@com.ytoxl.module.yipin.base.dataobject.Product@STATUS_PASS}  
+           AND b.brandId=#{brandId} 
+           AND p.brandId=#{brandId} 
+           AND b.status =${@com.ytoxl.module.yipin.base.dataobject.Sale@STATUS_RELEASE}
+           AND g.isDelete=${@com.ytoxl.module.yipin.base.dataobject.ProductSku@ISDELETE_NO}
+           ORDER BY s.rank DESC
+		
+	</select>
+	<!-- 根据ksuCode查询商品 -->
+	<select id="searchProductBySkuCode" 
+		resultType="Product">
+		select s.skuCode,p.productId,p.name,s.unitPrice,p.description 
+		from product_sku s 
+		inner join product p 
+		on s.productId = p.productId
+	</select>
+	
+	
+	<!-- 根据查询商品SKUID查询品牌ID -->
+  	<select id="getBrandIdBySkuId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+  		SELECT p.brandId 
+		FROM product p 
+		INNER JOIN product_sku s
+		on p.productId = s.productId  
+		<where >
+			s.productSkuId = #{productSkuId} 
+		</where>
+		limit 1
+  	</select>
+</mapper>

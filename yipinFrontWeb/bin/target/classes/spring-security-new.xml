@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans   
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd   
+    http://www.springframework.org/schema/security   
+    http://www.springframework.org/schema/security/spring-security-3.0.xsd">
+	<beans:description>Spring Security安全配置</beans:description>
+	<http auto-config="false" use-expressions="true" entry-point-ref="loginUrlAuthenticationEntryPoint">
+		<logout logout-success-url="/index.htm" />
+		<!-- access is denied 时触发 -->
+        <access-denied-handler   ref="accessDeniedHandler" /> 
+        <!--  记住密码 两周时间  -->
+		 <remember-me  services-ref="rememberMeServices"/>
+       <!--  记住密码 两周时间 -->
+<!--         <remember-me key="ytoxl123456789" token-validity-seconds="1209600"/>  -->
+        <custom-filter ref="UserLoginSuccessBeforeFilter" after="CAS_FILTER" />
+        <!-- 增加一个自定义的filter，放在FILTER_SECURITY_INTERCEPTOR之前， 实现用户、角色、权限、资源的管理。 -->
+        <custom-filter ref="CustomFilterSecurityInterceptorImpl" before="FILTER_SECURITY_INTERCEPTOR" />
+        <custom-filter ref="UserLoginSuccessAfterFilter" after="FILTER_SECURITY_INTERCEPTOR" />
+        <!-- 在登录之前，避免和验证码冲突 -->
+        <custom-filter ref="loginFilter" position="FORM_LOGIN_FILTER"  /> 
+<!--    		<custom-filter ref="rememberMeFilter" position="REMEMBER_ME_FILTER"/>  -->
+        <!-- 静态资源不要访问 -->
+        <intercept-url pattern="/web-resource/**" filters="none"/>
+        <intercept-url pattern="/order/order-listCartItem.htm" filters="none"/><!-- 购物车url -->
+	</http>
+	<!--	 -->
+	
+	<beans:bean id="rememberMeFilter" class="org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter">
+	  	<beans:property name="authenticationManager"  ref="authenticationManager"></beans:property>
+		<beans:property name="rememberMeServices" ref="rememberMeServices"></beans:property>
+	</beans:bean>
+	 <beans:bean id="rememberMeServices"  class="org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices">
+		  <beans:property name="userDetailsService" ref="customUserDetailsService" />
+		  <beans:property name="key" value="ytoxl123456789" />
+		  <beans:property name="alwaysRemember" value="false"></beans:property>
+		  <beans:property name="tokenValiditySeconds" value="1209600"></beans:property>
+		  <beans:property name="parameter" value="_spring_security_remember_me"></beans:property>
+	</beans:bean>
+	<beans:bean id="rememberMeAuthenticationProvider" class="org.springframework.security.authentication.RememberMeAuthenticationProvider">
+		  <beans:property name="key" value="ytoxl123456789" />
+	</beans:bean> 
+		
+	<beans:bean id="loginUrlAuthenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+	 		<beans:property name="loginFormUrl" value="/login.htm?error4"/>
+	</beans:bean>
+	<!-- 拒绝访问操作类 -->
+    <beans:bean id="accessDeniedHandler" class="com.ytoxl.module.user.security.CustomAccessDeniedHandler" >
+        <beans:property name="errorPage" value="/login.htm?error3"/>
+    </beans:bean>
+    <!-- 登录验证器 -->  
+    <beans:bean id="loginFilter"  
+        class="com.ytoxl.yipin.web.security.CustomUsernamePasswordAuthenticationFilter">  
+        <!-- 处理登录的action -->  
+        <beans:property name="filterProcessesUrl" value="/j_spring_security_check"></beans:property>  
+                <!-- 验证成功后的处理-->  
+        <beans:property name="authenticationSuccessHandler" ref="customAuthenticationSuccessHandler"></beans:property>  
+                <!-- 验证失败后的处理-->  
+        <beans:property name="authenticationFailureHandler" ref="simpleUrlAuthenticationFailureHandler"></beans:property>  
+        <beans:property name="authenticationManager" ref="authenticationManager"></beans:property>
+        <beans:property name="rememberMeServices" ref="rememberMeServices"></beans:property>  
+    </beans:bean> 
+    <!-- 用户成功登陆前后过滤 -->
+    <beans:bean id="UserLoginSuccessBeforeFilter" class="com.ytoxl.module.user.web.filter.UserLoginSuccessBeforeFilter" />
+    <beans:bean id="UserLoginSuccessAfterFilter" class="com.ytoxl.module.user.web.filter.UserLoginSuccessAfterFilter" >
+        <beans:property name="failureUrl" value="/login.htm?error1"/>
+        <beans:property name="filterProcessesUrl" value="/index.htm"/>
+        <beans:property name="redirectUrl" value="${user.redirectUrl.url}"/>
+        <beans:property name="mpUserStatusCheck" value="${mpUserStatusCheck}"/>
+    </beans:bean>
+    <!-- 登录成功后 操作类-->
+    <beans:bean id="customAuthenticationSuccessHandler" class="com.ytoxl.module.user.security.CustomAuthenticationSuccessHandler" >
+        <beans:constructor-arg value="/index.htm" />
+        <beans:property name="customAlwaysUseDefTargUrl" value="${customAlwaysUseDefTargUrl}"/>
+    </beans:bean>
+    <!-- 登录失败之后跳转 -->
+    <beans:bean id="simpleUrlAuthenticationFailureHandler" class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">  
+        <!-- 可以配置相应的跳转方式。属性forwardToDestination为true采用forward false为sendRedirect -->  
+        <beans:property name="defaultFailureUrl" value="/login.htm?error5"></beans:property>  
+    </beans:bean> 
+    <!-- 一个自定义的filter，必须包含authenticationManager,accessDecisionManager,securityMetadataSource三个属性。 -->
+    <beans:bean id="CustomFilterSecurityInterceptorImpl" class="com.ytoxl.module.user.security.CustomFilterSecurityInterceptorImpl">
+        <beans:property name="authenticationManager" ref="authenticationManager" /><!-- 登陆的认证 -->
+        <beans:property name="accessDecisionManager" ref="customAccessDecisionManager" /><!-- 资源访问决策 -->
+        <beans:property name="securityMetadataSource" ref="customSecurityMetadataSource" /><!-- 资源和权限列表 -->
+    </beans:bean>
+    <authentication-manager alias="authenticationManager" >  
+        <authentication-provider ref="loginAuthenticationProvider"/>
+        <authentication-provider ref="rememberMeAuthenticationProvider" />
+         <!-- 自己进行加密比较  使用自定义UserDetailsService 
+	        <authentication-provider user-service-ref="customUserDetailsService">  
+	         	<password-encoder base64="true" hash="md5">
+	                <salt-source system-wide="${password_salt}"/> 
+	            </password-encoder> 
+	        </authentication-provider> 
+	        <authentication-provider  ref="loginAuthenticationProvider"/>
+        <authentication-provider ref="rememberMeAuthenticationProvider" />
+         -->
+    </authentication-manager>
+    <!-- 使用自己的 用户认证 -->
+     <beans:bean id="loginAuthenticationProvider" class="com.ytoxl.yipin.web.security.LoginAuthenticationProvider">
+    	<beans:property  name="userDetailsService" ref="customUserDetailsService"/>
+    	<beans:property  name="ytoxlSalt" value="yto123456xl"/>
+    	<beans:property name="hash" value="md5"></beans:property>
+	 </beans:bean>
+</beans:beans>

@@ -1,0 +1,69 @@
+/* clearfix */
+.cf {
+	zoom: 1;
+}
+.cf:before,
+.cf:after {
+	content: "";
+	display: table;
+}
+.cf:after {
+	clear: both;
+	overflow: hidden;
+}
+.cl {
+	clear: both;
+	overflow: hidden;
+	font-size: 0;
+	height: 0;
+}
+.rel{position:relative;z-index:1;}
+.fl{float:left;_display:inline;}
+.fr{float:right;_display:inline}
+input{vertical-align:middle;}
+.Wdate {
+    background: url("../../images/icon.png") no-repeat scroll 72px 0 rgba(0, 0, 0, 0);
+    border: 1px solid #B1B1B3;
+    height: 24px;
+    line-height: 24px;
+    padding: 0 3px;
+    width: 150px;
+}
+.onError_top{color:#f00;}
+/*广告位管理*/
+.allSelect{width:200px;}
+.m-5{margin-left:10px;}
+.business-management .cgray{margin-left:10px;color:#333333;}
+.business-management a{color:#36c;}
+.relative{position:relative;z-index:1;}
+.imgBox{position:absolute;top:18px;left:0;display:none;}
+
+.addBanner label{width:200px;text-align:right;display:inline-block;}
+.addBanner div{padding:10px 0;}
+.red{color:#f00;}
+i{font-style:normal;}
+/*专区管理*/
+.J_input{width:90px;display:none;}
+.J_inputs{width:90px;display:none;}
+.J_edit{margin-left:10px;}
+.J_edits{margin-left:10px;}
+.addsanpUp label{width:150px;text-align:right;display:inline-block;} 
+.addsanpUp div{padding:10px 0;}
+.addsanpUp .seller{padding-left:30px;border:1px solid #ccc;margin:0 50px;max-height: 400px;overflow-y: auto;}
+.addsanpUp .seller ul {padding-left: 10px;width: 800px;}
+.addsanpUp .seller li{position:relative;float:left;display:inline;margin:0 20px 20px 0;}
+.addsanpUp .seller li img{border:1px solid #ccc;}
+.addsanpUp .seller .defaSku{cursor:pointer;position:absolute;background:#fff;padding:10px 5px;width:100px;line-height:2;top:10px;left:0;display:none;}
+.addsanpUp .seller .defaSku{border:1px solid #ccc;}
+.cb{padding-top:5px;text-align:center;}
+.m5{margin:0 5px;}
+.addsanpUp   .qz_th{padding-left:20px;}
+.W50{width:50px;}
+.qz_time p{padding-bottom:5px;}
+.qzBox { border: 1px solid #CCCCCC; margin: 0 50px;max-height: 500px;overflow-y: auto;padding: 5px;}
+.txt-area{border:1px solid #ccc;width:500px;padding:10px;}
+#zonenameTip,#linenoTip{position:absolute;left:346px;top:9px;}
+/*添加广告*/
+.addADV label{float:left;}
+.addADV .infoADV{overflow:hidden;*zoom:1;padding:0;}
+.addADV .infoADV .txt-input,.addADV .infoADV select{margin-bottom:10px;}

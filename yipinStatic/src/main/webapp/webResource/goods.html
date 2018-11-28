@@ -1,0 +1,196 @@
+﻿<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title>选择商品</title>
+	<!--css-->
+	<link rel="stylesheet" href="css/lib/global.css" />
+	<!--page css-->
+	<link rel="stylesheet" href="css/pages/goods.css" />
+</head>
+<body>
+	<!--头部导航 start-->
+	<div class="header">
+		<!--头部左侧 start-->
+		<div class="header_left fn_left">
+			<h1 class="fn_left"><a href="javascript:" title="一品网"><img src="images/navigation/logo.jpg" alt="一品网" /></a></h1>
+			<p class="fn_left introduce">产地直供品质保证</p>
+			<p class="fn_left"><a href="javascript:" title="登录">登录</a><span class="long_line">|</span><a href="javascript:" title="注册">注册</a></p>
+			<p class="fn_left my_yp"><a href="javascript:" title="我的一品">我的一品</a></p>
+		</div>
+		<!--头部左侧 end-->
+		<!--头部右侧 start-->
+		<div class="header_right fn_right">
+			<ul>
+				<li class="cur"><a href="javascript:">杭州 | 西湖龙井</a></li>
+				<li><a href="javascript:">广西 | 花桥藕粉</a></li>
+				<li class="cur"><a href="javascript:">浙江 | 临安山核桃</a></li>
+			</ul>
+			<div class="find">
+				<p><a href="javascript:"><img src="images/navigation/find.jpg" alt="发现" width="38" height="30"/></a></p>
+				<a href="javascript:">发现</a>
+			</div>
+		</div>
+		<!--头部右侧 end-->
+	</div>
+	<!--头部导航 end-->
+	<!--内容部分 start-->
+	<div class="w_norm">
+		<!--商品 start-->
+		<div class="goods">
+			<div class="cf goods_hd">
+				<span class="fn_right">当前位置：<a href="javascript">首页</a><span>></span><a href="javascript:">产品名称</a><span>></span>商品名称</span>
+				<span class="fn_left">请选择一种商品</span>
+			</div>
+			<p class="red">预售商品预计发货日期：2013年12月12日</p>
+			<div class="goods_bd">
+				<ul class="goods_list cf">
+					<li data-id="${product.productSkuId}" data-sellerId="${product.userId }" data-len="20">
+						<div class="goods_img">
+							<a href="javascript:" title="商品" class="J_img">
+							   <img src="images/goods.png" alt="${_imagesPath }/${product.name}" width="200px" height="200px"/>
+							</a>
+						</div>
+						<p class="goods_price">单价：<span>￥111</span></p>
+						<div class="goods_name">卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡</div>
+						<div class="len_box">
+							<span class="f12">购买数量</span><a href="javascript:" class="less">-</a><input type="text" class="len_input" value="0"/><a href="javascript:" class="more">+</a>
+						</div>
+					</li>
+					<li data-id="${product.productSkuId}" data-sellerId="${product.userId }" data-len="20">
+						<div class="goods_img">
+							<a href="javascript:" title="商品" class="J_img">
+							   <img src="images/goods.png" alt="${_imagesPath }/${product.name}" width="200px" height="200px"/>
+							</a>
+						</div>
+						<p class="goods_price">单价：<span>￥111</span></p>
+						<div class="goods_name">卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡</div>
+						<div class="len_box">
+							<span class="f12">购买数量</span><a href="javascript:" class="less">-</a><input type="text" class="len_input" value="0"/><a href="javascript:" class="more">+</a>
+						</div>
+					</li>
+					<li data-id="${product.productSkuId}" data-sellerId="${product.userId }" data-len="20">
+						<div class="goods_img">
+							<a href="javascript:" title="商品" class="J_img">
+							   <img src="images/goods.png" alt="${_imagesPath }/${product.name}" width="200px" height="200px"/>
+							</a>
+						</div>
+						<p class="goods_price">单价：<span>￥111</span></p>
+						<div class="goods_name">卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡</div>
+						<div class="len_box">
+							<span class="f12">购买数量</span><a href="javascript:" class="less">-</a><input type="text" class="len_input" value="0"/><a href="javascript:" class="more">+</a>
+						</div>
+					</li>
+					<li>
+						<div class="goods_img relative">
+							<a href="javascript:" title="商品" class="J_img"><img src="images/goods.png" alt="商品" /></a>
+							<img src="images/goods_end.png" alt="" class="end_bg"/>
+						</div>
+						<p class="goods_price">单价：<span>￥111</span></p>
+						<div class="goods_name">卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡卡</div>
+					</li>
+				</ul>
+				<div class="clearing J_clearing">
+					<p class="already">您选择的商品：</p>
+					<div class="J_goodsMsg"></div>
+				</div>
+			</div>
+			<div class="continue cf J_continue">
+				<div class="fn_right">
+					<span class="c999">下一步：为商品挑选合适的送货方案</span><a href="javascript:" class="continueBtn">继续</a>
+				</div>
+			</div>
+			<div class="state">
+				<img src="images/g1.png" alt="购物保障" /><img src="images/g2.png" alt="关于快递" /><img src="images/g3.png" alt="关于发货" /><img src="images/g4.png" alt="色差说明" />
+			</div>
+		</div>
+		<!--商品 end-->
+	</div>
+	<!--内容部分 end-->
+	<!--底部 start-->
+	<div class="foot">
+		<!--底部服务保障 start-->
+		<div class="foot_top cf">
+			<ul>
+				<li>
+					<h4 class="ensure1">100%<br />
+					原产地发货</h4>
+				</li>
+				<li>
+					<h4 class="ensure2">生产商直供<br />
+					品质保证</h4>
+				</li>
+				<li class="none">
+					<h4 class="ensure3">专业物流<br />
+					安全速达</h4>
+				</li>
+			</ul>
+		</div>
+		<!--底部服务保障 end-->
+		<div class="foot_mid_wp">
+			<!--底部导航 start-->
+			<div class="foot_mid cf">
+				<!--帮助信息 start-->
+				<div class="help">
+					<dl>
+						<dt>购物指南</dt>
+						<dd><a target="_blank" href="http://www.xlbuy365.com/help/help-100000.htm" target="_blank" rel="nofollow">新用户注册</a></dd>
+						<dd><a target="_blank" href="http://www.xlbuy365.com/help/help-100001.htm" target="_blank" rel="nofollow">购物流程</a></dd>
+						<dd><a target="_blank" href="http://www.xlbuy365.com/help/help-100002.htm" target="_blank" rel="nofollow">订单查询与操作</a></dd>
+					</dl>
+					<dl>
+						<dt>关于配送</dt>
+						<dd><a target="_blank" href="http://www.xlbuy365.com/help/help-100003.htm" target="_blank" rel="nofollow">配送方式</a></dd>
+						<dd><a target="_blank" href="http://www.xlbuy365.com/help/help-100004.htm" target="_blank" rel="nofollow">验货与签收</a></dd>
+					</dl>
+					<dl>
+						<dt>关于支付</dt>
+						<dd><a target="_blank" href="http://www.xlbuy365.com/help/help-100005.htm" target="_blank" rel="nofollow">支付方式</a></dd>
+						<dd><a target="_blank" href="http://www.xlbuy365.com/help/help-100006.htm" target="_blank" rel="nofollow">关于发票</a></dd>
+					</dl>
+					<dl>
+						<dt>售后服务</dt>
+						<dd><a target="_blank" href="http://www.xlbuy365.com/help/help-100007.htm" target="_blank" rel="nofollow">正品保障</a></dd>
+						<dd><a target="_blank" href="http://www.xlbuy365.com/help/help-100008.htm" target="_blank" rel="nofollow">退换货政策</a></dd>
+						<dd><a target="_blank" href="http://www.xlbuy365.com/help/help-100009.htm" target="_blank" rel="nofollow">退货细则</a></dd>
+						<dd><a target="_blank" href="http://www.xlbuy365.com/help/help-100010.htm" target="_blank" rel="nofollow">退货流程</a></dd>
+					</dl>
+					<dl>
+						<dt>关于我们</dt>
+						<dd><a target="_blank" href="http://www.xlbuy365.com/help/help-100011.htm" target="_blank" rel="nofollow">公司介绍</a></dd>
+						<dd><a target="_blank" href="http://www.xlbuy365.com/help/help-100012.htm" target="_blank" rel="nofollow">合作品牌</a></dd>
+						<dd><a target="_blank" href="http://www.xlbuy365.com/help/help-100013.htm" target="_blank" rel="nofollow">联系方式</a></dd>
+						<dd><a target="_blank" href="http://www.xlbuy365.com/help/help-100015.htm" target="_blank" rel="nofollow">商务合作</a></dd>
+						<dd><a href="http://www.xlbuy365.com/help/siteMap.htm" target="_blank">网站地图</a></dd>
+					</dl>
+				</div>
+				<!--帮助信息 end-->
+				<!--关注信息 start-->
+				<div class="fol_c1">
+					<p class="hotline">021-6090 4918</p>
+					<p class="yy_time">AM9:00-PM18:00</p>
+					<p><a href="" target="_blank"><img src="images/foot/weibo.png" alt="" /></a></p>
+				</div>
+				<div class="fol_c2">
+					<p class="wx_tit">一品网官方微信</p>
+					<p class="img"><img src="images/foot/weixin.jpg" alt="" /></p>
+					<p>扫一扫，拿优惠</p>
+				</div>
+				<!--关注信息 end-->
+			</div>
+			<!--底部导航 end-->
+		</div>
+        <div class="foot_bot_wp">
+            <div class="foot_bot">
+                <p><span>Copyright © 2000-2013 All Right Reserved</span>上海圆通新龙电子商务有限公司   沪ICP备07507086号-3</p>
+            </div>
+        </div>
+	</div>
+	<!--底部 end-->
+	<!--js-->
+	<script type="text/javascript" src="js/jquery/jquery-1.7.2.js"></script>
+	<script type="text/javascript" src="js/plugin/plugin.js"></script>
+	<!--page js-->
+	<script type="text/javascript" src="js/pages/goods.js"></script>
+</body>
+</html>

@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ytoxl.module.yipin.order.mapper.OrderRefundMapper">
+	<insert id="add" parameterType="OrderRefund" keyProperty="orderRefundId"
+		useGeneratedKeys="true">
+		insert into order_refund(
+		orderRefundId,
+		orderId,
+		orderAddressId,
+		orderRefundNo,
+		refundNum,
+		customerName,
+		mobile,
+		refundReason,
+		imageUrls,
+		reviewDescribe,
+		status,
+		sellerCheckUserId,
+		sellerCheckTime,
+		adminCheckUserId,
+		adminCheckTime,
+		createTime
+		)
+		values(
+		#{orderRefundId},
+		#{orderId},
+		#{orderAddressId},
+		#{orderRefundNo},
+		#{refundNum},
+		#{customerName},
+		#{mobile},
+		#{refundReason},
+		#{imageUrls},
+		#{reviewDescribe},
+		#{status},
+		#{sellerCheckUserId},
+		#{sellerCheckTime},
+		#{adminCheckUserId},
+		#{adminCheckTime},
+		CURRENT_TIMESTAMP
+		)
+	</insert>
+
+	<!-- 删除一条数据 -->
+	<delete id="del" parameterType="java.lang.Integer">
+		DELETE FROM order_refund WHERE
+		orderRefundId = #{orderRefundId}
+  	</delete>
+
+	<!-- 更新一条数据 -->
+	<update id="update" parameterType="OrderRefund">
+		UPDATE order_refund
+		SET
+		orderId
+		= #{orderId},
+		orderAddressId = #{orderAddressId},
+		refundNum =
+		#{refundNum},
+		customerName = #{customerName},
+		mobile = #{mobile},
+		refundReason = #{refundReason},
+		imageUrls = #{imageUrls},
+		reviewDescribe = #{reviewDescribe},
+		status = #{status},
+		sellerCheckUserId = #{sellerCheckUserId},
+		sellerCheckTime =
+		#{sellerCheckTime},
+		adminCheckUserId = #{adminCheckUserId},
+		adminCheckTime = #{adminCheckTime},
+		updateTime = CURRENT_TIMESTAMP
+		WHERE orderRefundId = #{orderRefundId}
+  	</update>
+
+	<!-- 查询一条数据 -->
+	<select id="get" parameterType="integer" resultType="OrderRefund">
+		SELECT
+		orderRefundId,
+		orderId,
+		orderAddressId,
+		refundNum,
+		customerName,
+		mobile,
+		refundReason,
+		imageUrls,
+		reviewDescribe,
+		status,
+		sellerCheckUserId,
+		sellerCheckTime,
+		adminCheckUserId,
+		adminCheckTime,
+		createTime,
+		updateTime
+		FROM order_refund
+		WHERE orderRefundId = #{orderRefundId}
+  	</select>
+
+	<!-- 更新退货申请信息 -->
+	<update id="updateStatus" parameterType="OrderRefund">
+		UPDATE order_refund
+		SET 
+		<if test="reviewDescribe != null and reviewDescribe!=''">
+			reviewDescribe = #{reviewDescribe},
+		</if>
+		<if test="refundReason != null and refundReason!=''">
+			refundReason = #{refundReason},
+		</if>
+		<if test="customerName != null and customerName!=''">
+			customerName = #{customerName},
+		</if>
+		<if test="mobile != null and mobile!=''">
+			mobile = #{mobile},
+		</if>
+		<if test="imageUrls != null and imageUrls!=''">
+			imageUrls = #{imageUrls,jdbcType=VARCHAR},
+		</if>
+		<if test="sellerCheckUserId != null and sellerCheckUserId!=''">
+			sellerCheckUserId = #{sellerCheckUserId},
+			sellerCheckTime=CURRENT_TIMESTAMP,
+		</if>
+		<if test="adminCheckUserId != null and adminCheckUserId!=''">
+			adminCheckUserId = #{adminCheckUserId},
+			adminCheckTime=CURRENT_TIMESTAMP,
+		</if>
+		status = #{status}
+		WHERE orderRefundId = #{orderRefundId}
+	</update>
+	
+	<!-- 查询退货订单的退货信息列表 -->
+	<select id="listOrderRefundByOrderId" parameterType="integer" resultMap="result_refundModel">
+		select 		
+			t1.orderRefundId,
+			t1.orderId,
+			t1.orderAddressId,
+			t1.refundNum,
+			t1.customerName,
+			t1.mobile,
+			t1.refundReason,
+			t1.reviewDescribe,
+			t1.status,
+			t1.sellerCheckUserId,
+			t1.sellerCheckTime,
+			t1.adminCheckUserId,
+			t1.adminCheckTime,
+			t1.createTime,
+			t1.updateTime,
+			t1.packageNo,
+      		t1.expressName,
+      		t1.expressNo,
+      		t1.packageTotalPrice,
+      		t1.orderRefundPaymentId,	
+      		t1.receiveAddress,	
+		    t1.imageUrls as refundImageUrls,
+		    t2.productName, 
+		    t2.unitPrice,
+		    t2.num,
+		    t2.productProp,
+		    t2.imageUrls
+		from
+	
+			  (select 
+				    refund.orderRefundId,
+					refund.orderId,
+					refund.orderAddressId,
+					refund.refundNum,
+					refund.customerName,
+					refund.mobile,
+					refund.refundReason,
+					refund.reviewDescribe,
+					refund.status,
+					refund.sellerCheckUserId,
+					refund.sellerCheckTime,
+					refund.adminCheckUserId,
+					refund.adminCheckTime,
+					refund.createTime,
+					refund.updateTime,  
+					refund.imageUrls,
+					address.packageNo,address.receiveAddress,address.packageTotalPrice,address.receiverName,
+					payment.orderRefundPaymentId,
+					express.expressName,express.expressNo
+				from order_refund refund 
+				INNER JOIN order_address address
+				on refund.orderId=#{orderId} and address.orderId=#{orderId} and refund.orderAddressId=address.orderAddressId 
+				left join order_refund_payment payment on refund.orderRefundId=payment.orderRefundId
+				left join order_refund_express express on refund.orderRefundId=express.orderRefundId) t1, 
+				
+		  (select 
+				addressitem.orderAddressId,addressitem.orderId,addressitem.assignCount as num,
+		        item.orderItemId,item.productName,item.unitPrice,item.productProp,item.imageUrls
+			from order_address_item addressitem, order_item item 
+			where addressitem.orderId=#{orderId} and item.orderId=#{orderId} and addressitem.orderItemId=item.orderItemId) t2 
+			
+		where t1.orderAddressId=t2.orderAddressId
+	</select>
+	<resultMap id="result_refundModel" type="OrderRefundModel">
+		<result property="orderRefundId" column="orderRefundId"/>
+	    <result property="orderId" column="orderId"/>
+	    <result property="refundNum" column="refundNum"/>
+	    <result property="customerName" column="customerName"/>
+	    <result property="mobile" column="mobile"/>
+	    <result property="refundReason" column="refundReason"/>
+	    <result property="imageUrls" column="refundImageUrls"/>
+	    <result property="reviewDescribe" column="reviewDescribe"/>
+	    <result property="status" column="status"/>
+	    <result property="sellerCheckUserId" column="sellerCheckUserId"/>
+	    <result property="sellerCheckTime" column="sellerCheckTime"/>
+	    <result property="adminCheckUserId" column="adminCheckUserId"/>
+	    <result property="adminCheckTime" column="adminCheckTime"/>
+        <result property="createTime" column="createTime"/>
+        <result property="updateTime" column="updateTime"/>	
+        <association property="orderAddress" column="orderAddressId" javaType="OrderAddress">
+			<result property="packageNo" column="packageNo"/>
+			<result property="receiveAddress" column="receiveAddress"/>
+		    <result property="packageTotalPrice" column="packageTotalPrice"/>
+		    <result property="receiverName" column="receiverName"/>
+		    <result property="expressName" column="expressName"/>
+		    <result property="expressNo" column="expressNo"/>
+	    </association>
+	    <association property="orderRefundPayment" column="orderRefundPaymentId" javaType="OrderRefundPayment">
+	    	<result property="ordeRrefundId" column="orderRefundId"/>
+	    	<result property="orderRefundPaymentId" column="orderRefundPaymentId"/>
+	    </association>
+	    <collection property="orderItems" column="orderItemId" ofType="OrderItem">
+	    	<result property="productName" column="productName"/>
+		    <result property="unitPrice" column="unitPrice"/>
+		    <result property="num" column="num"/>
+		    <result property="productProp" column="productProp"/>
+		    <result property="imageUrls" column="imageUrls"/>
+	    </collection>
+	</resultMap>
+	
+	<!-- 后台查询订单 -->
+	<select id="searchOrdersRefund4Manager" resultType="OrderHead">
+		select 
+			head.orderId,
+		    head.orderNo,
+		    head.userId,
+		    head.status,
+		    head.paymentAmount,
+		    head.originalAmount,
+		    head.hasInvoice,
+		    head.invoiceTitle,
+		    head.payTime,
+		    head.accountId,
+		    head.accountInfo,
+		    head.ipAddress,
+		    head.payType,
+		    head.payStatus,
+		    head.createTime,
+		    head.updateTime,
+		    GROUP_CONCAT(oi.orderSource ORDER BY oi.orderSource) AS orderSource
+		FROM order_head head
+		INNER JOIN order_refund refund ON head.orderId=refund.orderId
+		INNER JOIN order_address_item oai on oai.orderId = head.orderId 
+		INNER JOIN order_address oa on oai.orderAddressId = oa.orderAddressId
+		INNER JOIN order_item oi on oai.orderItemId = oi.orderItemId 
+		<if test="sellerId != null and sellerId != ''">
+			AND oi.sellerId = #{sellerId}
+		</if>
+		<if test="brandId != null and brandId != ''">
+			JOIN product_sku ps ON oi.productSkuId = ps.productSkuId
+			JOIN product p ON ps.productId = p.productId AND p.brandId = #{brandId}
+		</if>
+		<where>
+			<if test="status != null and status != ''">
+				and refund.status = #{status}
+			</if>
+			<if test="beginTime != null and beginTime != ''">
+				AND DATE_FORMAT(head.createTime,"%Y-%m-%d") &gt;= #{beginTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND DATE_FORMAT(head.createTime,"%Y-%m-%d") &lt;= #{endTime}	
+			</if>
+			<if test="keywords != null and keywords != ''">
+				and (
+						head.orderNo like CONCAT('%',#{keywords},'%') 
+					OR oa.receiverName like CONCAT('%',#{keywords},'%')
+					<if test="sellerFlag != null and sellerFlag != ''">
+						OR oa.mobile like CONCAT('%',#{keywords},'%') 
+						OR oa.telephone like CONCAT('%',#{keywords},'%')
+					</if>
+				)
+			</if>
+		</where>
+		GROUP BY head.orderId
+		<if test="sort != null and sort != '' and dir != null and dir != ''">
+			ORDER BY ${sort} ${dir}
+		</if>
+		limit #{start},#{limit}
+	</select>
+	
+	<!-- 后台查询订单总数 -->
+	<select id="searchOrdersRefund4ManagerCount" resultType="java.lang.Integer">
+		select 
+			count(*)
+		FROM (
+			select 
+				head.orderId
+			FROM order_head head
+			INNER JOIN order_refund refund ON head.orderId=refund.orderId
+			INNER JOIN order_address_item oai on oai.orderId = head.orderId 
+			INNER JOIN order_address oa on oai.orderAddressId = oa.orderAddressId
+			INNER JOIN order_item oi on oai.orderItemId = oi.orderItemId 
+			<if test="sellerId != null and sellerId != ''">
+				AND oi.sellerId = #{sellerId}
+			</if>
+			<if test="brandId != null and brandId != ''">
+				JOIN product_sku ps ON oi.productSkuId = ps.productSkuId
+				JOIN product p ON ps.productId = p.productId AND p.brandId = #{brandId}
+			</if>
+			<where>
+				<if test="status != null and status != ''">
+					and refund.status = #{status}
+				</if>
+				<if test="beginTime != null and beginTime != ''">
+					AND DATE_FORMAT(head.createTime,"%Y-%m-%d") &gt;= #{beginTime}
+				</if>
+				<if test="endTime != null and endTime != ''">
+					AND DATE_FORMAT(head.createTime,"%Y-%m-%d") &lt;= #{endTime}	
+				</if>
+				<if test="keywords != null and keywords != ''">
+					and (
+						   head.orderNo like CONCAT('%',#{keywords},'%') 
+					 	OR oa.receiverName like CONCAT('%',#{keywords},'%')
+						<if test="sellerFlag != null and sellerFlag != ''">
+							OR oa.mobile like CONCAT('%',#{keywords},'%') 
+							OR oa.telephone like CONCAT('%',#{keywords},'%')
+						</if>
+					)
+				</if>
+			</where>
+			GROUP BY head.orderId
+		) A
+	</select>
+  	 
+	<!-- 前台我的退货管理 -->
+	<select id="searchRefundOrder4Front" resultType="OrderHead">
+		select distinct
+			   head.orderId,
+			   head.orderNo,
+			   head.userId,
+			   head.status,
+			   head.hasInvoice,
+	   	   	   head.invoiceTitle,
+			   head.paymentAmount,
+			   head.originalAmount,
+			   head.createTime,
+			   head.updateTime
+		from order_head head left join order_address addr
+			 on head.orderId = addr.orderId
+		<where>  
+			  head.status = ${@com.ytoxl.module.yipin.order.dataobject.OrderHead@STATUS_FINISHED}
+			  and (DATEDIFF(CURRENT_TIMESTAMP,addr.sendProductTime)+1) &lt;= ${@com.ytoxl.module.yipin.order.dataobject.OrderRefund@orderRefundDefaultTime}
+			<if test="userId != null and userId != ''">
+				and head.userId = #{userId}
+			</if>
+			<if test="sort != null and sort != ''">
+				order by ${sort}
+				<if test="dir != null and dir != ''">
+					${dir}
+				</if>
+			</if>
+		</where> 
+			limit #{start},#{limit}
+	</select>
+
+	<select id="searchRefundOrder4FrontCount" resultType="java.lang.Integer">
+		select count(*)
+		from (
+			   select distinct
+			   head.orderId,
+			   head.orderNo,
+			   head.userId,
+			   head.status,
+			   head.hasInvoice,
+			   head.invoiceTitle,
+			   head.paymentAmount,
+			   head.originalAmount,
+			   head.createTime,
+			   head.updateTime
+		from order_head head left join order_address addr
+			 on head.orderId = addr.orderId
+		<where>
+			  <if test="userId != null and userId != ''">
+	   		 	head.userId = #{userId} and 
+  		 	  </if>
+			  head.status = ${@com.ytoxl.module.yipin.order.dataobject.OrderHead@STATUS_FINISHED}
+			  and (DATEDIFF(CURRENT_TIMESTAMP,addr.sendProductTime)+1) &lt;= ${@com.ytoxl.module.yipin.order.dataobject.OrderRefund@orderRefundDefaultTime}
+		</where> 
+		) t
+	</select>
+	
+	<!-- 通过orderAddressId 查询包裹退货信息 -->
+	<select id="getOrderRefundByOrderAddressId" resultType="OrderRefund">
+		select 	orderRefundId,
+				orderId,
+				orderAddressId,
+				status
+		from order_refund
+		where orderAddressId = #{orderAddressId}		
+	</select>
+	
+	<!-- 前台我的退货记录 -->
+	<select id="searchRefundRecords4Front" resultType="OrderRefund">
+		select refund.orderRefundId,
+			   refund.orderAddressId,
+			   refund.orderRefundNo,
+			   refund.createTime,
+			   refund.status,
+			   refund.reviewDescribe,
+			   refundExpress.expressId,
+			   refundExpress.expressName,
+			   refundExpress.expressNo,
+			   head.orderNo					as `orderHead.orderNo`,
+			   addr.packageNo				as `orderAddress.packageNo`
+	    from order_refund refund left join order_address addr
+	    	 on refund.orderAddressId = addr.orderAddressId 
+	    	 left join order_head head 
+	    	 on head.orderId = addr.orderId
+	    	 left join order_refund_express refundExpress
+	    	 on refund.orderRefundId =  refundExpress.orderRefundId
+	   	<where>
+	   		 <if test="userId != null and userId != ''">
+	   		 	head.userId = #{userId}
+	   		 </if>
+	   		 <if test="sort != null and sort != ''">
+				order by ${sort}
+				<if test="dir != null and dir != ''">
+					${dir}
+				</if>
+			</if>
+	   	</where>
+	   	limit #{start},#{limit}
+	</select>
+	<select id="searchRefundRecords4FrontCount" resultType="java.lang.Integer">
+		select count(*)
+		from order_refund refund left join order_address addr
+	    	 on refund.orderAddressId = addr.orderAddressId 
+	    	 left join order_head head 
+	    	 on head.orderId = addr.orderId
+	    	 left join order_refund_express refundExpress
+	    	 on refund.orderRefundId =  refundExpress.orderRefundId
+		<where>
+			<if test="userId != null and userId != ''">
+	   		 	head.userId = #{userId}
+   		 	</if>
+		</where>
+	</select>
+
+  	<!-- 根据订单id和包裹地址id查询退货表中的退货状态 -->
+  	<select id="listOrderReturnByAddressId" resultType="com.ytoxl.module.yipin.order.dataobject.resultmap.OrderRefundStaModel">
+  		SELECT refund.orderId,refund.orderAddressId,refund.status AS `refundStatus`
+		FROM order_refund refund 
+  		where refund.orderId = #{orderId}
+  		and refund.orderAddressId = #{orderAddressId}
+  	</select>
+
+	<!-- 根据orderId 查询退货的包裹数量 -->
+	<select id="countRefundPackageNumByorderId" resultType="java.lang.Integer">
+		select count(*)
+		from order_refund
+		where orderId = #{orderId}
+	</select>
+</mapper>

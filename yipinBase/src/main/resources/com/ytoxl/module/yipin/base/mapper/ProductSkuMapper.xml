@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ytoxl.module.yipin.base.mapper.ProductSkuMapper">
+	
+	<!-- 插入一条商品SKU数据 -->
+	<insert id="add" parameterType="ProductSku"  keyProperty="productSkuId" useGeneratedKeys="true">
+		INSERT INTO product_sku
+			(productId, inventory, skuCode, unitPrice, createTime,marketPrice,isDefault,sellerSkuCode)
+		VALUES
+		 	(#{productId}, #{inventory}, #{skuCode}, #{unitPrice}, CURRENT_TIMESTAMP,#{marketPrice},#{isDefault},#{sellerSkuCode})
+	</insert>
+	
+	<!-- 更新一条商品SKU数据 -->
+	<update id="update" parameterType="ProductSku">
+		UPDATE product_sku
+		SET
+			inventory = #{inventory},
+			internationalCode = #{internationalCode},
+			sellerSkuCode = #{sellerSkuCode},
+			isDefault = #{isDefault},
+			skuCode = #{skuCode},
+			unitPrice = #{unitPrice},
+			marketPrice = #{marketPrice}
+		WHERE productSkuId = #{productSkuId}
+	</update>
+	
+	<!-- 逻辑删除一条商品SKU数据 -->
+	<update id="del" parameterType="java.lang.Integer">
+		UPDATE product_sku
+		SET isDelete = ${@com.ytoxl.module.yipin.base.dataobject.ProductSku@ISDELETE_YES}
+		WHERE productSkuId = #{productSkuId}
+	</update>
+	
+	<!-- 逻辑删除多条SKU数据 -->
+	<update id="logicDelBatch">
+		UPDATE product_sku
+		SET isDelete = ${@com.ytoxl.module.yipin.base.dataobject.ProductSku@ISDELETE_YES}
+		WHERE productSkuId IN
+		<foreach item="productSku" collection="list" open="(" separator="," close=")">
+			#{productSku.productSkuId}
+		</foreach>
+	</update>
+	
+	<select id="get" parameterType="java.lang.Integer" resultType="ProductSku">
+		SELECT * FROM product_sku 
+		WHERE productSkuId = #{productSkuId}
+	</select>
+	
+	<!-- 根据skuCode查询数据 ,判断skuCode是否已存在-->
+	<select id="getBySkuCode" parameterType="ProductSku" resultType="ProductSku">
+		SELECT productSkuId FROM product_sku 
+		WHERE skuCode = #{skuCode}
+			<if test="productSkuId != null and productSkuId != ''">
+			AND productSkuId != #{productSkuId}
+			</if>
+	</select>
+	
+	<!-- 根据productId, sellerId查询商品SKU信息 -->
+	<select id="listProductSkuIdsByProductIdAndUserId" resultType="java.lang.Integer">
+		SELECT a.productSkuId 
+			FROM product_sku a INNER JOIN product b ON a.productId = b.productId
+		WHERE a.productId = #{productId} 
+			AND b.userId = #{userId}
+			AND a.isDelete = ${@com.ytoxl.module.yipin.base.dataobject.ProductSku@ISDELETE_NO}
+	</select>
+	
+	<!-- 更新库存为0 -->
+	<update id="updateInventoryByIds">
+		UPDATE product_sku SET inventory = 0
+		WHERE productSkuId IN
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<!-- 快速编辑库存 -->
+	<update id="updateInventoryQuick">
+		UPDATE product_sku SET inventory = #{inventory}
+		WHERE productSkuId = #{productSkuId}
+	</update>
+	
+	<!-- 根据商品ID查询商品SKU -->
+	<select id="listProductSkusByProductId" parameterType="java.lang.Integer" resultType="ProductSku">
+		SELECT a.productSkuId,a.productId, a.unitPrice, a.marketPrice, a.inventory, a.salesQuantity, 
+			   a.skuCode, a.internationalCode, a.isDefault,sellerSkuCode
+			FROM product_sku a
+		WHERE a.productId = #{productId}
+			AND a.isDelete = ${@com.ytoxl.module.yipin.base.dataobject.ProductSku@ISDELETE_NO}
+		ORDER BY a.productId
+	</select>
+	
+	<!-- 根据商品ID删除ProductSku -->
+	<delete id="delProductSkuByProductId" parameterType="java.lang.Integer">
+		DELETE FROM product_sku 
+		WHERE productId = #{productId}
+	</delete>
+    
+  	<!-- 更新一条商品SKU数据 -->
+	<update id="changeProductSkuInventory" >
+		UPDATE product_sku
+		SET inventory = inventory - #{num}
+		WHERE inventory - #{num} &gt;= 0
+			AND productSkuId = #{productSkuId}
+	</update>
+	
+	<update id="updateSaleQualtity">
+		update product_sku
+		set salesQuantity=IFNULL(salesQuantity,0) + #{num}
+		where productSkuId=#{productSkuId}
+	</update>
+	
+	<!-- 取消订单时,归还库存 -->
+	<update id="revertProductSkuInventory" >
+		UPDATE product_sku
+		SET inventory = inventory + #{num}
+		WHERE productSkuId = #{productSkuId}
+	</update>
+	
+	<sql id="productSkuProductInfo">
+		pro.productId AS `product.productId`,
+		pro.brandId AS `product.brandId`,
+		pro.productCategoryId AS `product.productCategoryId`,
+		pro.sellerId AS `product.sellerId`,
+		pro.name AS `product.name`,
+		pro.imageUrls AS `product.imageUrls`,
+		pro.secKillDescribe AS `product.secKillDescribe`,
+		pro.secKillPrice AS `product.secKillPrice`, 
+		pro.salePrice AS `product.salePrice`,
+		pro.marketPrice AS `product.marketPrice`,     
+		pro.isImport AS `product.isImport`, 
+		pro.rank AS `product.rank`,
+		pro.status AS `product.status`,   
+		pro.keyWord AS `product.keyWord`,  
+		pro.hits AS `product.hits`,
+		pro.rebate AS `product.rebate`,  
+		pro.sellStartTime AS `product.sellStartTime`,  
+		pro.sellEndTime AS `product.sellEndTime`,     
+		pro.createTime AS `product.createTime` 
+	</sql>
+	<!-- 根据skuId查询商品信息 -->
+  	<select id="getProductSkuById" parameterType="Integer" resultType="ProductSku">
+  		SELECT <include refid="productSkuProductInfo"/>,
+  			b.name as `product.brand.name`,
+  			sku.productSkuId,
+			sku.inventory,
+			sku.secKillInventory
+		FROM  product_sku sku INNER JOIN  product pro  ON  pro.productId = sku.productId
+			  inner join brand b on b.brandId=pro.brandId
+		where sku.productSkuId = #{productSkuId}
+  	</select>
+  	<!-- 根据skuId 和productId查询商品信息 -->
+  	<select id="getProductSkuByIdMap" parameterType="map" resultType="ProductSku">
+  		SELECT 
+			pro.imageUrls AS `product.imageUrls`,
+			pro.salePrice AS `product.salePrice`,
+			pro.marketPrice AS `product.marketPrice`,
+			pro.name AS `product.name`,
+			pro.productId AS `product.productId`,
+			sku.productSkuId,
+			sku.inventory,
+			sku.secKillInventory
+		FROM  product_sku sku INNER JOIN  product pro  ON  pro.productId = sku.productId
+		where 1=1
+		<if test="productSkuId!=null and productSkuId!='' ">
+			and sku.productSkuId = #{productSkuId}
+		</if>
+		<if test="productId!=null and productId.size()>0 ">
+				and sku.productId in 
+		 <foreach collection="productId" item="productIds"  open="(" separator="," close=")"> 
+          		(#{productIds})  
+          </foreach>
+		</if>
+  	</select>
+  	
+  	<!--  -->
+  	<select id="getProductSkuInventoryByProductSkuId" resultType="java.lang.Integer">
+  		select inventory
+  		from product_sku
+  		where productSkuId=#{productSkuId}
+  	</select>
+  	
+  	    <!-- 查询品牌商品库存 -->
+  	<select id="listBrandProducts" parameterType="java.util.List" resultType="ProductSku">
+  		SELECT productId, inventory
+		FROM product_sku sku	
+		<where>
+			<if test='list != null'>
+				sku.productId IN 
+				<foreach item="item" collection="list" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+  	</select>
+  	
+  	<!-- 根据skuCode查询商品信息集合 -->
+	<select id="listProductSkusBySkuCode" resultType="ProductSku">
+		SELECT a.productId, a.unitPrice, a.skuCode, b.brandId AS `product.brandId` FROM product_sku a 
+		INNER JOIN product b ON a.productId = b.productId
+		WHERE a.skuCode IN
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<!-- 
+	* 根据分类或者原产地或者专区查询商品信息集合
+	*
+	* 参数类型：Map
+	* 参数信息： 
+	*     type:查询类别(1:原产地, 2:分类, 3:抢购专区, 4:预售专区, 5:普通专区)
+	*     zoneType:专区类型(1:抢购专区,2:预售专区,3:普通专区)
+	* 	  code:分类code
+	* 	  orderBy: 排序(0:默认排序,1:按销量降序,2:按浏览量降序,3:按价格从低到高,4:按价格从高到低)
+	* 	  isHaveInventory: 是否只是查询有库存商品(isHaveInventory=1只查询有库存商品)
+	-->
+	<select id="listProductSkusByMap" parameterType="map" resultType="ProductSku"> 
+			SELECT distinct 
+			   <choose>  
+		 			<when test="type==3"><!-- 抢购专区查询 --> 
+			            t3.productSkuId,
+			        </when>     
+			        <otherwise>
+			        	t4.productId,
+			        </otherwise>  
+	  	    	</choose>
+				t4.hits,t4.brandId AS `product.brandId`, 
+				t4.name AS `product.name`,t4.recommendedReason AS `product.recommendedReason`,
+				t4.imageUrls AS `product.imageUrls`,t4.coverPicture AS `product.coverPicture`
+	   			<choose>  
+		 			<when test="type==3"><!-- 抢购专区查询 --> 
+			            ,t1.saleBeginTime,t1.saleEndTime
+			        </when>
+			        <when test="type==4"><!-- 预售专区查询 --> 
+			            ,t4.preDeliveryTime AS `product.preDeliveryTime`
+			        </when>     
+			        <otherwise></otherwise>  
+	  	    	</choose>
+				<choose>  
+		        	<when test="type==1||type==2"><!-- 按照原产地或者分类查询 -->
+						FROM 
+							product_prop t1, 
+							prop t2, 
+							product_sku t3, 
+							product t4 
+						WHERE t2.code LIKE CONCAT('%',#{code},'%') 
+							AND t3.isDelete=0
+							AND t4.status=3
+							AND t4.sellType=3
+							AND t1.propId=t2.propId  
+			        </when>       
+			        <otherwise><!-- 按照专区查询 -->
+			          	FROM    
+			          		zone_sale t1,
+							zone t2,
+							product_sku t3, 
+							product t4 
+						WHERE t2.zoneType=#{zoneType}
+							<if test="zoneType==3"><!-- 普通专区 -->
+								AND t2.zoneId=#{zoneId}
+							</if>
+							AND t3.isDelete=0
+							AND t4.status=3
+						    AND t1.zoneId=t2.zoneId
+			        </otherwise>  
+		    	</choose>
+	    			<choose>
+	    				<when test="type==3"><!-- 抢购专区-->
+							AND t1.productSkuId = t3.productSkuId  
+				        </when>       
+				        <otherwise>
+				        	AND t1.productId=t3.productId
+				        </otherwise>
+			        </choose>	
+						AND t3.productId=t4.productId
+					<if test="isHaveInventory==1"><!-- 只查询有库存商品 -->
+						AND t3.inventory>0
+					</if>
+				<choose>  
+			        <when test="orderType==1"><!-- 1:按销量降序 -->
+			            ORDER BY t3.salesQuantity desc,t3.inventory desc
+			        </when>  
+			        <when test="orderType==2"><!-- 2:按浏览量降序 -->
+			            ORDER BY t4.hits desc,t3.inventory desc
+			        </when> 
+			        <when test="orderType==3"><!-- 3:按价格从低到高 -->
+			            ORDER BY t3.unitPrice asc,t3.inventory desc
+			        </when>
+		 			<when test="orderType==4"><!-- 4:按价格从高到低 --> 
+			            ORDER BY t3.unitPrice desc,t3.inventory desc
+			        </when>     
+		        	<otherwise><!-- 0:默认降序 -->
+		           		ORDER BY t3.inventory desc  		
+		        	</otherwise>  
+		   		</choose>  
+			  		limit #{start},#{limit}
+	</select>
+ 
+	<!-- 
+	* 根据分类或者原产地查询商品信息总数
+	*
+	* 参数类型：Map
+	* 参数信息： 
+	* 	type:查询类别(1:原产地, 2:分类, 3:抢购专区, 4:预售专区, 5:普通专区)
+	* 	zoneType:专区类型(1:抢购专区,2:预售专区,3:普通专区)
+	* 	code:分类code 
+	* 	isHaveInventory: 是否只是查询有库存商品(isHaveInventory=1只查询有库存商品)
+	-->
+	<select id="countProductSkusByMap" parameterType="map" resultType="int">
+		SELECT 
+			<choose>
+   				<when test="type==3"><!-- 抢购专区-->
+					count(distinct t3.productSkuId)  
+		        </when>       
+		        <otherwise>
+		     		count(distinct t3.productId)
+		        </otherwise>
+	        </choose> 
+			<choose>  
+	        	<when test="type==1||type==2"><!-- 按照原产地或者分类查询 -->
+					FROM 
+						product_prop t1, 
+						prop t2, 
+						product_sku t3, 
+						product t4 
+					WHERE t2.code LIKE CONCAT('%',#{code},'%') 
+						AND t3.isDelete=0
+						AND t4.status=3
+						AND t4.sellType=3
+						AND t1.propId=t2.propId  
+		        </when>       
+		        <otherwise><!-- 按照专区查询 -->
+		          	FROM    
+		          		zone_sale t1,
+						zone t2,
+						product_sku t3, 
+						product t4 
+					WHERE t2.zoneType=#{zoneType}
+						<if test="zoneType==3"><!-- 普通专区 -->
+							AND t2.zoneId=#{zoneId}
+						</if>
+						AND t3.isDelete=0
+						AND t4.status=3
+					    AND t1.zoneId=t2.zoneId
+		        </otherwise>  
+	    	</choose>	
+	    			<choose>
+	    				<when test="type==3"><!-- 抢购专区-->
+							AND t1.productSkuId = t3.productSkuId  
+				        </when>       
+				        <otherwise>
+				        	AND t1.productId=t3.productId
+				        </otherwise>
+			        </choose>
+					AND t3.productId=t4.productId
+				<if test="isHaveInventory==1"><!-- 只查询有库存商品 -->
+					AND t3.inventory>0
+				</if>			   
+	</select>
+	
+	<!-- 查询商品规格值 -->
+	<select id="getOverrideSkuOptionValue" parameterType="int" resultType="map">
+		SELECT 
+			t8.overrideSkuOptionValue, t5.skuOptionValue
+ 		FROM sku_option_value t5
+		INNER JOIN sku_option t6
+			ON t5.skuOptionId=t6.skuOptionId AND t6.skuOptionName='规格'
+		INNER JOIN product_sku_option_value t8 
+			ON t8.productSkuId=#{productSkuId}
+			AND t5.skuOptionValueId=t8.skuOptionValueId
+	</select>
+	
+	<!-- 根据商品id查询商品产地 -->
+	<select id="listPropsOfProduct" parameterType="int" resultType="Prop">
+		SELECT distinct t2.propId,t2.name FROM product_prop t1, prop t2 
+		WHERE t1.productId=#{productId} AND t1.propId=t2.propId 
+	</select>
+	
+	<!-- 根据专区首字符查询商品SKU -->
+    <select id="listProductByBarndFirstCharAndQg" parameterType="java.lang.String" resultType="ProductSku">
+    	SELECT k.*,z.saleEndTime,z.saleBeginTime,p.productId,p.imageUrls as `product.imageUrls`,
+    	p.coverPicture as `product.coverPicture`,p.userId, z.rank as `product.rank`,p.`name` AS 'product.name'  FROM product_sku k 
+           INNER JOIN  product p
+           ON p.productId = k.productId
+           INNER JOIN brand b 
+           ON p.brandId = b.brandId 
+           LEFT JOIN  zone_sale z 
+           ON k.productSkuId = z.productSkuId  
+           WHERE b.firstChar=#{firstChar} and k.isDelete =${@com.ytoxl.module.yipin.base.dataobject.ProductSku@ISDELETE_NO} 
+           AND p.sellType =${@com.ytoxl.module.yipin.base.dataobject.Product@SELLTYPE_QG}
+           AND k.inventory > ${@com.ytoxl.module.yipin.base.dataobject.ProductSku@ISDELETE_NO}
+           AND p.status=${@com.ytoxl.module.yipin.base.dataobject.Product@STATUS_PASS}
+    </select>
+    
+    <!-- 根据专区ID查询商品SKU -->
+    <select id="listProductSkuByZoneId" parameterType="java.lang.Integer" resultType="ProductSku">
+    	SELECT k.*,z.saleBeginTime,z.saleEndTime,p.productId,p.userId,p.coverPicture as `product.coverPicture`,
+    	p.imageUrls as `product.imageUrls`,z.rank as `product.rank`,p.`name` AS 'product.name' FROM product_sku k 
+           INNER JOIN  product p
+           ON p.productId = k.productId
+           INNER JOIN brand b 
+           ON p.brandId = b.brandId
+           INNER JOIN  zone_sale z 
+           ON k.productSkuId = z.productSkuId
+           WHERE k.isDelete =${@com.ytoxl.module.yipin.base.dataobject.ProductSku@ISDELETE_NO} 
+           AND  p.sellType =${@com.ytoxl.module.yipin.base.dataobject.Product@SELLTYPE_QG} 
+           AND z.zoneId=#{zoneId} 
+           AND k.inventory > ${@com.ytoxl.module.yipin.base.dataobject.ProductSku@ISDELETE_NO}
+           AND p.status=${@com.ytoxl.module.yipin.base.dataobject.Product@STATUS_PASS}
+    </select>
+    
+</mapper>

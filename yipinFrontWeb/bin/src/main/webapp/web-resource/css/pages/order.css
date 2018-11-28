@@ -1,0 +1,93 @@
+/* -------------------------------------------------
+ * 选择商品
+ * -------------------------------------------------
+*/
+.order_content{margin-top:35px;padding-bottom:40px;}
+.order_content h2{height:20px;height:22px;line-height:22px;padding-left:22px;border-bottom:2px solid #ccc;padding-bottom:10px;margin-bottom:15px;}
+.order_content h2 span{display:inline-block;font-size:12px;margin-left:10px;padding-left:10px;border-left:2px solid #717171;}
+.ggods_table{border:1px solid #ccc;}
+.ggods_table th{height:36px;text-align:left;font-weight:normal;background:#f2f2f2;}
+.ggods_table th.first{text-align:center;}
+.ggods_table td{padding:13px 0;font-size:16px;border-bottom:1px dashed #ccc;}
+.ggods_table td.frist{padding-left:20px;}
+.ggods_table .W100{width:100px;text-align:center;display:block;}
+.ggods_table tr.last td{background:#fff6e5;border-bottom:none;}
+.ggods_table .goods_img{float:left;border:2px solid #a5a5a5;}
+.ggods_table .goods_Msg{float:left;padding-top:13px;word-break:break-all;word-wrap:break-word;margin-left:15px;display:inline;width:315px;}
+.ggods_table .goods_Msg .c999{color:#b3b3b3;margin-top:6px;font-size:12px;}
+.ggods_table .red{color:#f63c30;}
+.ggods_table .delete{color:#36c;}
+.less{text-align:center;color:#000;font-size:18px;line-height:24px;width:21px;height:24px;display:inline-block;border:1px solid #ccc;background:#eee;vertical-align:middle;margin-left:5px;}
+.more{text-align:center;color:#000;width:21px;height:24px;line-height:24px;display:inline-block;vertical-align:middle;border:1px solid #ccc;background:#eee;}
+.len_input{border:1px solid #ccc;border-left:0;border-right:0;height:24px;line-height:21px;width:55px;text-align:center;vertical-align:middle;}
+.profile .deliv_adr{margin-top:0;}
+.profile{margin-top:40px;}
+.profile_hd{border:1px solid #ccc;border-bottom:0;}
+.profile_hd li{font-size:20px;position:relative;line-height:1;height:26px;line-height:26px;float:left;border-right:1px solid #ccc;width:460px;padding:18px 0 20px 38px;cursor:pointer;}
+.profile_hd li span{position:absolute;display:inline-block;font-size:12px;padding-left:10px;border-left:2px solid #717171;top:8px;left:126px;}
+.profile_hd li.cur{color:#f63c2f;font-size:26px;background:url("../../images/adr_choose.png") no-repeat 12px center #fff6e5;}
+.profile_hd li.cur span{background:#fff6e5;color:#4D4D4D;left:150px;}
+.profile_hd li.last{border-right:none;}
+.profile .has_adr .goods_list{padding:0;border-top:1px solid #ccc;}
+.gift_table  td{padding:13px 0;font-size:16px;border-bottom:1px dashed #a5a5a5;text-align:left;}
+.gift_table  .goods_img{float:left;border:2px solid #a5a5a5;}
+.gift_table  .goods_Msg{float:left;padding-top:13px;margin-left:15px;display:inline;}
+.gift_table .goods_Msg .c999{color:#b3b3b3;margin-top:6px;font-size:12px;}
+.gift_table .table_a{width:350px;text-align:center;padding-left:50px;}
+.gift_table .table_b{width:200px;padding-left:10px;}
+.gift_table .last td{border-bottom:none;}
+.enterBtn{position:absolute;right:10px;top:2px;width:105px;height:50px;color:#fff;line-height:50px;text-align:center;font-size:26px;background:url(../../images/btn/enter.png) no-repeat;display:none;}
+.enterBtn:hover{color:#fff;}
+.btn_adr{float:none;position:relative;}
+.profile .give_adr td.right{padding-left:14px;padding:0;}
+.profile .give_adr .right_div{height:126px;height:51px;line-height:51px;padding-right:20px;}
+.right_div .addGoodBtn{text-align:right;font-size:14px;display:block;}
+.adr_tab,.adr_list{font-size:14px;}
+.adr_list .right a{color:#36c;cursor:pointer;}
+.adr_list .right .edit{padding-left:20px;border-left:1px solid #b3b3b3;display:inline-block;margin-left:15px;}
+.profile .has_adr li{padding:15px 0 15px 22px;}
+.profile .give_adr li{padding:0;}
+.join{padding:20px 0 0 22px;color:#999;}
+.profile .give_adr td{padding:15px 0 15px 22px;}
+.profile .give_adr .adr_Cur .adr_tab{background:#FDF8E7 url('../../images/adr_choose.png') 5px 16px no-repeat;}
+.pay_type,.delivery_type,.invoice{padding-top:32px;}
+.orderBtn{width:130px;-moz-border-radius:5px; -webkit-border-radius:5px;border-radius:5px;background:#ededed;border:1px solid #ededed;text-align:center;height:60px;line-height:60px;display:inline-block;font-size:20px;}
+.orderBtn_cur{border:1px solid #ffcb3e;background:url("../../images/adr_choose.png") no-repeat 6px center #fff6e5;}
+.zfnBtn .orderBtn_cur{background-position:14px center;}
+.personBtn .orderBtn_cur{background-position:25px center;}
+.orderBtn:hover{color:#4D4D4D;}
+.p22{padding-left:22px;}
+.m22{margin-left:22px;}
+.invoice_Msg{padding:10px 0 0 22px;}
+.invoice_Msg div{padding:10px 0;}
+.invoice_Msg .input-text{width:335px;height:20px;padding:10px 0 10px 15px;border:1px solid #ccc;-moz-border-radius:5px; -webkit-border-radius:5px;border-radius:5px;}
+.invoice_tip{color:#919191;}
+.hide{display:none;}
+.invoice .has_adr li{padding:15px 0 15px 22px;cursor:pointer;}
+.adr_list{cursor:pointer;}
+.has_adr li.adr_listCur{background:#FDF8E7 url('../../images/adr_choose.png') 5px 16px no-repeat;}
+.has_adr li.bg{background:#FDF8E7;}
+.outTip{font-size:12px;diaplay:block;position:absolute;padding:5px;top:24px;left:0;}
+.clearing_msg{padding:25px 20px 0 0;text-align:right;font-size:14px;}
+.clearing_msg p{padding:6px 0 6px 0;line-height:1.2;}
+.clearing_msg .price{font-size:30px;color:#f63c30;font-weight:bold;}
+.clearing_msg .rmb{font-size:20px;color:#f63c30;}
+.clearing_msg .red{color:#f63c30;}
+.ClearingBtn{width:165px;height:50px;line-height:50px;text-align:center;display:inline-block;background:url(../../images/btn/clearing.png) no-repeat;font-size:26px;color:#fff;}
+.ClearingBtn:hover{color:#fff;}
+#dressBox,#dressBox1,#dressBox2{display:none;}
+.mx{line-height:1;padding-top:10px;height:50px;}
+.mx span{font-size:12px;}
+.btn_adr{margin-left: 10px;}
+.btn_adr .create_adr{ background: url("../../images/btn/btn_adr.jpg") left center no-repeat;color:#f00;font-weight:bold;}
+/*验证地址*/
+.input-focus{border:1px solid #ccc;-moz-border-radius:5px; -webkit-border-radius:5px;border-radius:5px;}
+.input-error{border:1px solid #ffc67d!important;-moz-border-radius:5px; -webkit-border-radius:5px;border-radius:5px;color:#f00!important;}
+.input-default{color:#cdcdcd!important;}
+.new_adr .relative{*position:static;}
+.new_adr .relative p.onError{position:absolute;width:250px;*margin-top:38px;*margin-left:-170px;}
+.onError-txt{display:block;background:url(../../images/register/form_error.png) 0 center no-repeat;padding-left:22px;color:#f90;}
+.invoiceDress li a,.J_myDressCur li a{float:right;display:inline;margin-right:20px;color:#36c;display:none;}
+.invoiceDress li a:hover,.J_myDressCur li a:hover{color:#36c;}
+
+

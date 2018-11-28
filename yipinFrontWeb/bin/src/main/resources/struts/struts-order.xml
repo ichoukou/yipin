@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="order" extends="yipin-default" namespace="/order">
+		<!-- 我的订单分页 -->
+		<action name="order-myOrders-*-*-*-*" class="com.ytoxl.yipin.web.action.order.OrderAction" method="myOrders">
+			<param name="orderPage.params.queryTime">{1}</param>
+			<param name="orderPage.params.status">{2}</param>
+			<param name="orderPage.total">{3}</param>
+			<param name="orderPage.currentPage">{4}</param>
+			<result name="myOrders">/WEB-INF/pages/order/myOrders.jsp</result>
+		</action>
+		
+		<!-- 我的订单分页 
+		<action name="order-myOrders-*-*-*" class="com.ytoxl.yipin.web.action.order.OrderAction" method="myOrders">
+			<param name="orderPage.params.status">{1}</param>
+			<param name="orderPage.total">{2}</param>
+			<param name="orderPage.currentPage">{3}</param>
+			<result name="myOrders">/WEB-INF/pages/order/myOrders.jsp</result>
+		</action>
+		-->
+		<!-- 我的订单分页 
+		<action name="order-myOrders-*-*" class="com.ytoxl.yipin.web.action.order.OrderAction" method="myOrders">
+			<param name="orderPage.total">{1}</param>
+			<param name="orderPage.currentPage">{2}</param>
+			<result name="myOrders">/WEB-INF/pages/order/myOrders.jsp</result>
+		</action>
+		-->
+		
+		<!-- 我的订单退货管理分页 -->
+		<action name="order-myRefundManage-*-*" class="com.ytoxl.yipin.web.action.order.OrderAction" method="myRefundManage">
+			<param name="orderPage.total">{1}</param>
+			<param name="orderPage.currentPage">{2}</param>
+			<result name="myRefundManage">/WEB-INF/pages/order/myRefundManage.jsp</result>
+		</action>
+		<!-- 包裹明细 -->
+		<action name="order-myOrderPackageDetail-*" class="com.ytoxl.yipin.web.action.order.OrderAction" method="myOrderPackageDetail">
+			<param name="orderAddressId">{1}</param>
+			<result name="myOrderPackageDetail">/WEB-INF/pages/order/myOrderPackageDetail.jsp</result>
+		</action>
+		<!-- 退货要填写的表单 -->
+		<action name="order-myOrderRefundForm-*" class="com.ytoxl.yipin.web.action.order.OrderAction" method="myOrderRefundForm">
+			<param name="orderAddressId">{1}</param>
+			<result name="myOrderRefundForm">/WEB-INF/pages/order/myOrderRefundForm.jsp</result>
+		</action>
+		<!-- 退货记录分页 -->
+		<action name="order-myRefundRecord-*-*" class="com.ytoxl.yipin.web.action.order.OrderAction" method="myRefundRecord">
+			<param name="refundPage.total">{1}</param>
+			<param name="refundPage.currentPage">{2}</param>
+			<result name="myRefundRecord">/WEB-INF/pages/order/myRefundRecord.jsp</result>
+		</action>
+		<!-- 退货填写快递信息 -->
+		<action name="order-writeRefundExpressInfoForm-*" class="com.ytoxl.yipin.web.action.order.OrderAction" method="writeRefundExpressInfoForm">
+			<param name="orderRefundId">{1}</param>
+			<result name="writeRefundExpressInfoForm">/WEB-INF/pages/order/writeRefundExpressInfoForm.jsp</result>
+		</action>
+		<!-- 发票详细信息 -->
+		<action name="order-invoiceDetail-*" class="com.ytoxl.yipin.web.action.order.OrderAction" method="invoiceDetail">
+			<param name="orderId">{1}</param>
+			<result name="invoiceDetail">/WEB-INF/pages/order/invoiceDetail.jsp</result>
+		</action>
+		<action name="order-*" class="com.ytoxl.yipin.web.action.order.OrderAction" method="{1}">
+			<result name="myOrders">/WEB-INF/pages/order/myOrders.jsp</result>
+			<result name="myOrdersAjax">/WEB-INF/pages/order/myOrdersAjax.jsp</result>
+			<result name="myOrderDetail">/WEB-INF/pages/order/myOrderDetail.jsp</result>
+			<result name="getOrderInfo">/WEB-INF/pages/order/getOrderInfo.jsp</result>
+			<result name="getAddressHtml">/WEB-INF/pages/address/address.html</result>
+			<result name="myRefundManage">/WEB-INF/pages/order/myRefundManage.jsp</result>
+			<result name="myRefundRecord">/WEB-INF/pages/order/myRefundRecord.jsp</result>
+			<result name="expressInfoAjax">/WEB-INF/pages/order/expressInfoAjax.jsp</result>
+			<result name="confirmOrder" type="redirectAction">
+     			<param name="namespace">/netpay</param> 
+				<param name="actionName">confirmOrder</param>
+				<param name="orderIds">${orderId}</param>      
+			</result>
+			
+		</action>
+	</package>
+</struts>

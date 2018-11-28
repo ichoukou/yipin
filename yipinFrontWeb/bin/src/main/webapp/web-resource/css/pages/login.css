@@ -1,0 +1,36 @@
+/* -------------------------------------------------
+ * register
+ * -------------------------------------------------
+*/
+.login{width:1000px;margin:58px auto 0;height:515px;}
+.login a{color:#5d80a8;}
+.login a:hover{color:#ff5500;}
+.login_left{width:500px;}
+.login_left h2{border-bottom:3px solid #f63c2f;padding-bottom:15px;font-size:30px;padding-left:15px;}
+.login_left h2 span{font-size:12px;display:inline-block;margin-left:5px;vertical-align:middle;font-weight:normal;border-left:2px solid #979997;padding-left:5px;}
+.login_bd{padding-left:25px;}
+.login_bd p{height:40px;line-height:40px;}
+.login .relative{width:350px;}
+#accountTip,#passwordTip,#mailTip,#pswTip,#authCodetTip{position:absolute;top:-29px;right:0;_top:-27px;}
+#authCodetTip{right:63px;}
+.input-text{width:335px;height:20px;padding:10px 0 10px 15px;padding:12px 0 8px 15px\0;*padding:13px 0 7px 15px;border:1px solid #ccc;-moz-border-radius:5px; -webkit-border-radius:5px;border-radius:5px;color:#4D4D4D!important;}
+.input-focus{border:1px solid #ffc67d;-moz-border-radius:5px; -webkit-border-radius:5px;border-radius:5px;}
+.input-error{border:1px solid #ffc67d!important;-moz-border-radius:5px; -webkit-border-radius:5px;border-radius:5px;color:#f00!important;}
+.input-default{color:#cdcdcd!important;}
+.labelPsw{position:absolute;left:15px;top:0;cursor:text;color:#cdcdcd;top:10px;}
+.onError-txt{float:left;height:28px;line-height:28px;display:block;border:1px solid #ffc67d;border-bottom:0;padding:0 18px 0 40px;background:#fff4e5 url(../../images/register/form_error.png) 10px center no-repeat;}
+.yzmImg{position:absolute;left:155px;top:1px;*top:2px;_top:3px;height:40px;border-left:1px solid #ccc;display:block;}
+.loginBtn_bd{margin-top:30px;}
+.login  .loginBtn{width:150px;height:50px;line-height:50px;background:url("../../images/btn/loginBtn.jpg") no-repeat;display:inline-block;font-size:25px;text-align:center;color:#fff;margin-right:30px;}
+.login  .loginBtn:hover{color:#fff;}
+.memoryUserName{margin-right:5px;vertical-align:-2px;}
+.login_right{padding:36px 0 0 0;width:435px;}
+.login_right p{font-size:14px;margin-bottom:20px;}
+#authCode{width:272px;}
+.yzmchange{position:absolute;right:14px;top:3px;cursor:pointer;}
+#cheboxTKTip{color:#f00;padding-left:30px;display:none;line-height:2;}
+#loginTip{margin-top:20px;}
+.login_bd .loginTip{line-height:1.2;height:auto;margin-top:0;}
+
+
+

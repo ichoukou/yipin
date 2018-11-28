@@ -1,0 +1,36 @@
+/* -------------------------------------------------
+ * 首页
+ * -------------------------------------------------
+*/
+/* 焦点图 */
+.slides{width:1200px;margin:0 auto;position:relative;margin-top:20px;}
+.slides .slides_container{width:1200px;height:420px;}
+.slides .pic{display:none;}
+.slides .prev,.slides .next{position:absolute;height:134px;width:73px;z-index:10;margin-top:-67px;;}
+.slides .prev{background-image:url('../../images/slide_btn.png');background-position:0 0;background-repeat:no-repeat;left:0;top:50%;}
+.slides .prev:hover{background-image:url('../../images/slide_btn.png');background-position:-73px 0;}
+.slides .next{background-image:url('../../images/slide_btn.png');background-position:0 -134px;background-repeat:no-repeat;right:0;top:50%;}
+.slides .next:hover{background-image:url('../../images/slide_btn.png');background-position:-73px -134px;}
+.slides .pagination{position:absolute;width:100px;left:50%;bottom:12px;z-index:8;margin-left:-50px;}
+.pagination li{float:left;padding-left:5px;}
+.pagination li a {display:block;width:12px;height:12px;text-indent:-9999em;background:url('../../images/pagination.png') 0 0 no-repeat;float:left;overflow:hidden;}
+.pagination li.current a {background-position:0 -12px;}
+
+/* 动态 */
+.trend{line-height:23px;background-color:#f2f2f2;margin-top:15px;padding:6px 0;}
+.trend .tre_tit{float:left;font-size:14px;font-weight:bold;}
+.trend .tre_txt{float:left;}
+.trend .tre_txt li{float:left;border-right:1px solid #c4c4c4;width:240px;text-align:center;}
+.trend .tre_more{float:right;width:160px;text-align:right;}
+
+.gd_item .s_pic{height:285px;}
+
+/* 抢购 */
+#panic_buy .watches{background:url('../../images/watches.gif') right bottom no-repeat;line-height:34px;padding-right:45px;}
+
+/* 售罄提示 */
+.gd_item .sold_out{position:absolute;top:34px;left:0;width:285px;height:285px;background:url('../../images/sold_out_big.png') no-repeat;}
+
+
+
+

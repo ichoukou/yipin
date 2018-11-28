@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="prop" extends="yipin-default" namespace="/admin/prop">
+		<action name="prop-*" class="com.ytoxl.yipin.web.action.prop.PropAction" method="{1}">
+			<result name="success">/WEB-INF/pages/prop/regionList.jsp</result>
+			<result name="loadRegion" type="redirectAction">
+				<param name="actionName">prop-loadRegion</param>
+				<param name="prop.level">${prop.level}</param>
+				<param name="prop.parentId">${prop.parentId}</param>
+				<param name="prop.code">${prop.code}</param>
+				<param name="prop.parentCode">${prop.parentCode}</param>
+         		<param name="regionName">${regionName}</param>
+                <param name="provinceName">${provinceName}</param>
+         	</result>
+		</action>
+	</package>
+</struts>

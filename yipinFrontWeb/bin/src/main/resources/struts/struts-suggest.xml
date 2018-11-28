@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="suggest" extends="yipin-default" namespace="/suggest">
+    	<!-- 分页建议意见 -->
+    	<action name="searchSuggest-*-*-*-*" class="com.ytoxl.yipin.web.action.user.SuggestAction" method="searchSuggest">
+        	<param name="suggestPage.params['type']">{1}</param>
+			<param name="suggestPage.limit">{2}</param>
+			<param name="suggestPage.total">{3}</param>
+			<param name="suggestPage.currentPage">{4}</param>
+        	<result name="searchSuggests">/WEB-INF/pages/user/suggest.jsp</result>
+        </action>
+        <!-- 我的发现我的吐槽 -->
+		<action name="searchSuggest-*" class="com.ytoxl.yipin.web.action.user.SuggestAction" method="searchSuggest">
+        	<param name="suggestPage.params['type']">{1}</param>
+        	<result name="searchSuggests">/WEB-INF/pages/user/suggest.jsp</result>
+        </action>
+        <!-- 保存我的发现我的吐槽 -->
+        <!-- <action name="saveSuggest-*" class="com.ytoxl.yipin.web.action.user.SuggestAction" method="saveSuggest">
+        	<param name="suggestPage.params['type']">{1}</param>
+        	<result name="saveSuggest" type="redirectAction">${nextAction}</result>
+        </action> -->
+        <!-- 跳转到我的发现页-->
+        <action name="myFind" class="com.ytoxl.yipin.web.action.user.SuggestAction" method="editSuggest">
+       		<result name="success">/WEB-INF/pages/user/myFind.jsp</result>
+       </action>
+       <action name="checkIsLogin" class="com.ytoxl.yipin.web.action.user.SuggestAction" method="checkIsLogin">
+       </action>
+       <action name="ajaxSaveSuggest" class="com.ytoxl.yipin.web.action.user.SuggestAction" method="ajaxSaveSuggest">
+       </action>
+	</package>
+</struts>

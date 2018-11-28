@@ -1,0 +1,28 @@
+/* -------------------------------------------------
+ * 找回密码
+ * -------------------------------------------------
+*/
+.find_psw{width:1000px;height: 608px;margin: 0 auto;text-align: center;}
+.find_psw h1{font-size:30px; color:#4d4d4d;padding: 42px 0;}
+.fp_form{width:485px; margin: 75px auto 0;}
+.fp_bar{margin:30px 0;}
+.fp_bar label{float:left; width:72px; display:inline-block; text-align: right; height:42px; line-height: 42px;}
+.fp_bar p{float:left; width:400px; text-align: left;}
+.fp_bar p a{float:right;margin-top:3px;}
+.input-default {color: #CDCDCD !important;}
+.input-text {border: 1px solid #CCCCCC; border-radius: 5px; color: #4D4D4D !important; height: 20px; padding: 10px 0 10px 15px; width: 335px;}
+.fp_bar .relative{position: relative;}
+.yzmImg{border-left: 1px solid #CCCCCC; border-radius: 5px; display: block; height: 40px; left: 258px; padding-left:15px; position: absolute; top: 1px;*top:2px;_top:3px;}
+.sub_reset{color: #FFFFFF; display: inline-block; font-size: 20px; height: 40px; line-height: 40px; text-align: center; width: 135px;background: url("../../images/btn/red.jpg") no-repeat scroll left center;}
+.sub_reset:hover{color:#ffffff;}
+.input-error{color:#f00!important;}
+.submit span{color: #FFFFFF; display: inline-block; font-size: 20px; height: 40px; line-height: 40px; text-align: center; width: 135px;}
+.fp_check{width:498px; text-align: left; margin:75px auto 0;}
+.fp_check p{font-size:15px; margin-bottom: 34px;}
+.fp_check ul li{padding: 5px 0;}
+.fp_check ul .red{color:red;}
+.fp_check ul .blue{color:#4a6dea;}
+.fp_check ul .grey{color:#b2b2b2;}
+/*验证*/
+#usernameTips,#newPswTips,#passwordTips,#j_captcha_1Tips{position:absolute;top:-29px;right:50px;_top:-27px;}
+.fp_form .onError-txt{float:left;height:28px;line-height:28px;display:block;border:1px solid #ffc67d;border-bottom:0;padding:0 18px 0 40px;background:#fff4e5 url(../../images/register/form_error.png) 10px center no-repeat;} 

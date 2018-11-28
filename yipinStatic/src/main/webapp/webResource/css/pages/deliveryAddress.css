@@ -1,0 +1,17 @@
+/* -------------------------------------------------
+ * 收货地址
+ * -------------------------------------------------
+*/
+#delivAdr .new_adr{display:block;}
+#delivAdr .new_adr td{padding-bottom:0;}
+#delivAdr .deliv_adr{border-bottom:0;}
+.adr_list .defa,.adr_list .edit,.adr_list .del{color:#1538ac;cursor:pointer;}
+.adr_list .line{margin:0 6px;}
+.adr_list .defa{visibility:hidden;}
+#delivAdr .has_def{background-color:#b3b3b3;border-radius:3px;padding:0 5px;color:#fff;display:inline-block;}
+#delivAdr .last_line td{padding:10px 0;}
+/* 验证 */
+.tip_wp{position:relative;padding:12px 0;}
+.adr_tips{position:absolute;bottom:-8px;left:0;}
+.adr_tips .onError-txt{display:inline-block;background:url(../../images/register/form_error.png) 0 center no-repeat;padding-left:22px;color:#f90;}
+.set_box{padding-bottom:10px;}

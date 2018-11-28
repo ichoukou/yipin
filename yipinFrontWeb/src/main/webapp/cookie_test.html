@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title>cookie测试</title>
+	<script type="text/javascript" src="http://192.168.5.254:8088/webResource/js/jquery/jquery-1.8.1.js"></script>
+	<!-- <script type="text/javascript" src="http://192.168.5.254:8088/webResource/js/plugin/jquery.cookie.js"></script> -->
+</head>
+<body>
+	<form action="/front/order/order-getOrderInfo.htm" method="post">
+		<input type="text" name="orders[0].items[0].productSkuId" value="10001"/>
+		<input type="text" name="orders[0].items[0].num" value="10"/>
+		<input type="button" name="addCartBtn" value="添加到购物车" onclick="addCart()">
+		<input type="submit" name="buy" value="抢购"/>
+	</form>
+	<script type="text/javascript">
+		function addCart(){
+			$.ajax({
+				type: "POST",
+			   	url: "/front/order/order-addOrDelProductToCart.htm",
+			   	data: {
+			   		"params.skuId":"10001",
+			   		"params.skuNum":"10"
+			   	},
+			   	success: function(data){
+			     	if(data.code=="true"){
+			     		window.location.href="/front/order/order-showCart.htm";
+			     	}
+			   	}
+			});
+		}
+	
+	</script>
+	
+</body>
+</html>
